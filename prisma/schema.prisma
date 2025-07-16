@@ -1,0 +1,147 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
+}
+
+enum Role {
+    ADMINISTRADOR
+    PERSONAL
+    ALUNO
+}
+
+enum Sexo {
+    MASCULINO
+    FEMININO
+    PREFIRO_NAO_DIZER
+}
+
+enum FocoTreino {
+    PERDER_PESO
+    GANHAR_MASSA
+    MANTER_A_FORMA
+}
+
+enum FocoCorpo {
+    BRACO
+    COSTAS
+    GLUTEOS
+    PERNA
+    CORPO_TODO
+}
+
+enum DiaSemana {
+    DOMINGO
+    SEGUNDA
+    TERCA
+    QUARTA
+    QUINTA
+    SEXTA
+    SABADO
+}
+
+model Aluno {
+    id             Int           @id @default(autoincrement())
+    role           Role          @default(ALUNO)
+    nome           String?
+    sobrenome      String?
+    foto           String
+    sexo           Sexo          @default(PREFIRO_NAO_DIZER)
+    foco_treino    FocoTreino?
+    peso           Float?
+    altura         Float?
+    idade          Int?
+    data_matricula DateTime?
+    email          String?       @unique
+    senha          String
+    telefone       String?       @unique
+    foco_corpo     FocoCorpo?
+    plano_id       Int?
+    plano          Plano?        @relation(fields: [plano_id], references: [id])
+    treinos_aluno  AlunoTreino[]
+    personal_id   Int?
+    personal      Personal?     @relation(fields: [personal_id], references: [id])
+    criado_em     DateTime      @default(now())
+}
+
+model Plano {
+    id         Int     @id @default(autoincrement())
+    tipo_plano String
+    valor      Decimal
+    alunos     Aluno[]
+}
+
+model Administrador {
+    id        Int    @id @default(autoincrement())
+    role      Role   @default(ADMINISTRADOR)
+    nome      String
+    sobrenome String
+    foto      String
+    telefone  String
+    senha     String
+    email     String @unique
+    criado_em DateTime @default(now())
+}
+
+model Personal {
+    id                    Int      @id @default(autoincrement())
+    role                  Role     @default(PERSONAL)
+    nome                  String
+    sobrenome             String
+    foto                  String
+    telefone              String?
+    senha                 String
+    email                 String?   @unique
+    formacao              String?
+    registro_profissional String?
+    especialidade         String?
+    disponibilidade       String?
+    treinos_criados       Treino[]
+    alunos                Aluno[]
+    criado_em            DateTime @default(now())
+}
+
+model Treino {
+    id             String        @id @default(uuid())
+    nome           String
+    descricao      String
+    foco_corpo FocoCorpo
+    foto       String?
+    exercicios     Exercicio[]
+    alunos         AlunoTreino[]
+    criador_id     Int
+    criador        Personal      @relation(fields: [criador_id], references: [id])
+    criado_em      DateTime      @default(now())
+}
+
+model Exercicio {
+    id                 String  @id @default(uuid())
+    nome               String
+    foto           String?
+    descricao          String
+    repeticoes         Int
+    execucoes          Int
+    intervalo_descanso Int
+    treino_id          String
+    treino             Treino  @relation(fields: [treino_id], references: [id], onDelete: Cascade)
+}
+
+model AlunoTreino {
+    id          Int                    @id @default(autoincrement())
+    aluno_id    Int
+    treino_id   String
+    concluido   Boolean                @default(false)
+    aluno       Aluno                  @relation(fields: [aluno_id], references: [id])
+    treino      Treino                 @relation(fields: [treino_id], references: [id])
+    dias_semana AlunoTreinoDiaSemana[]
+}
+
+model AlunoTreinoDiaSemana {
+    id            Int         @id @default(autoincrement())
+    alunoTreinoId Int
+    diaSemana     DiaSemana
+    alunoTreino   AlunoTreino @relation(fields: [alunoTreinoId], references: [id], onDelete: Cascade)
+}

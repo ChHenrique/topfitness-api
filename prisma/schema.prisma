@@ -26,11 +26,11 @@ enum FocoTreino {
 }
 
 enum FocoCorpo {
-    BRACO
+    PEITO
+    BRACOS
     COSTAS
     GLUTEOS
-    PERNA
-    CORPO_TODO
+    PERNAS
 }
 
 enum DiaSemana {
@@ -47,6 +47,7 @@ model Aluno {
     id             String        @id @default(uuid())
     role           Role          @default(ALUNO)
     nome           String?
+    treino_dias_por_semana Int? 
     sobrenome      String?
     foto           String
     sexo           Sexo          @default(PREFIRO_NAO_DIZER)
@@ -65,6 +66,7 @@ model Aluno {
     personal_id   String?
     personal      Personal?     @relation(fields: [personal_id], references: [id])
     criado_em     DateTime      @default(now())
+    observacao     String?
 }
 
 model Plano {

@@ -44,7 +44,7 @@ enum DiaSemana {
 }
 
 model Aluno {
-    id             Int           @id @default(autoincrement())
+    id             String        @id @default(uuid())
     role           Role          @default(ALUNO)
     nome           String?
     sobrenome      String?
@@ -59,23 +59,23 @@ model Aluno {
     senha          String
     telefone       String?       @unique
     foco_corpo     FocoCorpo?
-    plano_id       Int?
+    plano_id       String?
     plano          Plano?        @relation(fields: [plano_id], references: [id])
     treinos_aluno  AlunoTreino[]
-    personal_id   Int?
+    personal_id   String?
     personal      Personal?     @relation(fields: [personal_id], references: [id])
     criado_em     DateTime      @default(now())
 }
 
 model Plano {
-    id         Int     @id @default(autoincrement())
+    id         String        @id @default(uuid())
     tipo_plano String
     valor      Decimal
     alunos     Aluno[]
 }
 
 model Administrador {
-    id        Int    @id @default(autoincrement())
+    id        String        @id @default(uuid())
     role      Role   @default(ADMINISTRADOR)
     nome      String
     sobrenome String
@@ -87,7 +87,7 @@ model Administrador {
 }
 
 model Personal {
-    id                    Int      @id @default(autoincrement())
+    id                    String        @id @default(uuid())
     role                  Role     @default(PERSONAL)
     nome                  String
     sobrenome             String
@@ -112,7 +112,7 @@ model Treino {
     foto       String?
     exercicios     Exercicio[]
     alunos         AlunoTreino[]
-    criador_id     Int
+    criador_id     String
     criador        Personal      @relation(fields: [criador_id], references: [id])
     criado_em      DateTime      @default(now())
 }
@@ -130,8 +130,8 @@ model Exercicio {
 }
 
 model AlunoTreino {
-    id          Int                    @id @default(autoincrement())
-    aluno_id    Int
+    id          String        @id @default(uuid())
+    aluno_id    String
     treino_id   String
     concluido   Boolean                @default(false)
     aluno       Aluno                  @relation(fields: [aluno_id], references: [id])
@@ -140,8 +140,8 @@ model AlunoTreino {
 }
 
 model AlunoTreinoDiaSemana {
-    id            Int         @id @default(autoincrement())
-    alunoTreinoId Int
+    id            String        @id @default(uuid())
+    alunoTreinoId String
     diaSemana     DiaSemana
     alunoTreino   AlunoTreino @relation(fields: [alunoTreinoId], references: [id], onDelete: Cascade)
 }

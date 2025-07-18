@@ -1,7 +1,6 @@
 import { randomUUID } from "crypto";
 import { IPhotoStorageDTO } from "./IPhotoStorage";
 import { join } from "path";
-import { env } from "process";
 import { writeFile } from "fs/promises";
 import { ServerError } from "src/services/serverError";
 import { fileType } from "./fileType";
@@ -16,5 +15,5 @@ export async function save(typeUploads: {}, data: IPhotoStorageDTO, type: string
     const path = join(typePath, uniqueName);
     await writeFile(path, data.buffer);
 
-    return `/${type}/${uniqueName}`
+    return `uploads/${type}/${uniqueName}`
 };

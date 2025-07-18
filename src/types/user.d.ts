@@ -1,7 +1,8 @@
 export interface userDTO {
-    role: "ALUNO" | "PERSONAL" | "ADMIN";
+    role: "ALUNO" | "PERSONAL" | "ADMINISTRADOR";
     id: string;
     email: string;
+    rememberMe: boolean = false;
 }
 
 declare module "fastify" {

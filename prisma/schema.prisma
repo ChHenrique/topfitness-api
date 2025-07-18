@@ -82,7 +82,7 @@ model Administrador {
     nome      String
     sobrenome String
     foto      String
-    telefone  String
+    telefone  String @unique
     senha     String
     email     String @unique
     criado_em DateTime @default(now())

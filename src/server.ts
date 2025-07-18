@@ -2,6 +2,7 @@ import fastify from "fastify";
 import cors from "@fastify/cors";
 import fastifyCookie from "@fastify/cookie";
 import fastifyMultipart from "@fastify/multipart";
+import { registerRoutes } from "./routes/registerRoutes";
 
 const server = fastify();
 
@@ -19,8 +20,9 @@ server.register(fastifyMultipart, {
 })
 
 server.register(fastifyCookie)
+server.register(registerRoutes)
 
-server.get("/", async (request, reply) => {
+server.get("/", () => {
     return { message: "Bem vindo a API da Academia Top Fitness!" };
 })
 

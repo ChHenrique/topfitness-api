@@ -12,6 +12,6 @@ export async function logoutAdminController(fastify: fastifyContextDTO){
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
         path: "/",
-    }).status(200).send({ message: "Logout realizado com sucesso", exist: user });
+    }).status(200).send({ message: "Logout realizado com sucesso" });
     
 }

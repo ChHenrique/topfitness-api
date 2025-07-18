@@ -94,7 +94,7 @@ model Personal {
     nome                  String
     sobrenome             String
     foto                  String
-    telefone              String?
+    telefone              String? @unique
     senha                 String
     email                 String?   @unique
     formacao              String?

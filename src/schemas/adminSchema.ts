@@ -13,7 +13,7 @@ export const loginAdminSchema = z.object({
     email: z.email().min(1, "O email é obrigatório").optional(),
     telefone: z.string().min(11, "O telefone é obrigatório").max(11).optional(),
     senha: z.string().min(8, "A senha deve ter pelo menos 8 caracteres"),
-    rememberMe: z.enum(['true', 'false']).transform(val => val === 'true').default(false),
+    rememberMe: z.boolean().default(false),
 });
 
 export type LoginAdminSchemaDTO = z.infer<typeof loginAdminSchema>

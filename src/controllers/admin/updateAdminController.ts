@@ -22,17 +22,16 @@ export async function updateAdminController(fastify: fastifyContextDTO) {
     const isAdminExist = await getAdminById(user.id);
     if (!isAdminExist) throw new ServerError("Administrador não encontrado", 404);
 
-    if (parsedData.data.email !== isAdminExist.email) {
+    if (parsedData.data.email && parsedData.data.email !== isAdminExist.email) {
         const isEmailExist = await getAdminByEmail(parsedData.data.email ?? '');
         if (isEmailExist) throw new ServerError("Email já cadastrado", 409);
     };
 
-    if (parsedData.data.telefone !== isAdminExist.telefone) {
+    if (parsedData.data.telefone && parsedData.data.telefone !== isAdminExist.telefone) {
         const isPhoneExist = await getAdminByPhone(parsedData.data.telefone ?? '');
         if (isPhoneExist) throw new ServerError("Telefone já cadastrado", 409);
     };
 
-    updatedFields(isAdminExist, parsedData.data);
     const foto = rawData.foto;
     if (foto && typeof foto.toBuffer === 'function') {
         const buffer = await foto.toBuffer();
@@ -40,9 +39,8 @@ export async function updateAdminController(fastify: fastifyContextDTO) {
         parsedData.data.foto = await photoStorageService({ buffer, filename, mimetype }, typeUploads.ADMINISTRADOR);
     }
 
-    const updatedAdmin = await updateAdmin(isAdminExist.id, parsedData.data);
-    fastify.res.status(200).send({
-        message: "Administrador atualizado com sucesso",
-        admin: updatedAdmin,
-    });
+    updatedFields(isAdminExist, parsedData.data);
+    await updateAdmin(isAdminExist.id, parsedData.data);
+
+    fastify.res.status(200).send({ message: "Administrador atualizado com sucesso" });
 }

@@ -40,11 +40,6 @@ export async function createAdminController(fastify: fastifyContextDTO) {
         parsedData.data.foto = null;
     }
 
-    const newAdmin = await createAdmin(parsedData.data);
-    const { senha, ...rest } = newAdmin;
-
-    fastify.res.status(201).send({
-        message: "Administrador criado com sucesso",
-        admin: rest,
-    });
+    await createAdmin(parsedData.data);
+    fastify.res.status(201).send({message: "Administrador criado com sucesso"});
 };

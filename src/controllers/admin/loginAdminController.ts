@@ -21,7 +21,7 @@ export async function loginAdminController(fastify: fastifyContextDTO){
         throw new ServerError("Email ou telefone são obrigatórios", 400);
     }
 
-    if (!admin) throw new ServerError("Credencias inválidas", 404);
+    if (!admin) throw new ServerError("Credencias inválidas");
 
     const isPasswordValid = await bcrypt.compare(parsedData.data.senha, admin.senha);
     if (!isPasswordValid) throw new ServerError("Credencias inválidas", 401);

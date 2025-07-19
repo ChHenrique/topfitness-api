@@ -6,6 +6,7 @@ import { photoStorageService } from "src/services/photoStorageService";
 import { updatedFields } from "src/utils/updateFields";
 import { typeUploads } from "src/types/typeUploads";
 import { normalizeMultipartBody } from "src/services/normalizeMultipartBody";
+import { updateUserPhotoMultipart } from "src/utils/photoMultipart";
 
 export async function updateAdminController(fastify: fastifyContextDTO) {
     const user = fastify.req.user;
@@ -32,12 +33,7 @@ export async function updateAdminController(fastify: fastifyContextDTO) {
         if (isPhoneExist) throw new ServerError("Telefone já cadastrado", 409);
     };
 
-    const foto = rawData.foto;
-    if (foto && typeof foto.toBuffer === 'function') {
-        const buffer = await foto.toBuffer();
-        const { filename, mimetype } = foto;
-        parsedData.data.foto = await photoStorageService({ buffer, filename, mimetype }, typeUploads.ADMINISTRADOR);
-    }
+    await updateUserPhotoMultipart(rawData, parsedData.data, typeUploads.ADMINISTRADOR);
 
     updatedFields(isAdminExist, parsedData.data);
     await updateAdmin(isAdminExist.id, parsedData.data);

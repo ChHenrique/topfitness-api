@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 import { photoStorageService } from "src/services/photoStorageService";
 import { typeUploads } from "src/types/typeUploads";
 import { normalizeMultipartBody } from "src/services/normalizeMultipartBody";
+import { createUserPhotoMultipart } from "src/utils/photoMultipart";
 
 export async function createAdminController(fastify: fastifyContextDTO) {
     const user = fastify.req.user;
@@ -31,14 +32,7 @@ export async function createAdminController(fastify: fastifyContextDTO) {
     const hashedPassword = await bcrypt.hash(parsedData.data.senha, 10);
     parsedData.data.senha = hashedPassword;
 
-    const foto = rawData.foto;
-    if (foto && typeof foto.toBuffer === 'function') {
-        const buffer = await foto.toBuffer();
-        const { filename, mimetype } = foto;
-        parsedData.data.foto = await photoStorageService({ buffer, filename, mimetype }, typeUploads.ADMINISTRADOR);
-    } else {
-        parsedData.data.foto = null;
-    }
+    await createUserPhotoMultipart(rawData, parsedData.data, typeUploads.ADMINISTRADOR);
 
     await createAdmin(parsedData.data);
     fastify.res.status(201).send({message: "Administrador criado com sucesso"});

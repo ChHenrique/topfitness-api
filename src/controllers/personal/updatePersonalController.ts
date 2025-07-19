@@ -6,6 +6,7 @@ import { photoStorageService } from "src/services/photoStorageService";
 import { ServerError } from "src/services/serverError";
 import { typeUploads } from "src/types/typeUploads";
 import { checkAccess } from "src/utils/checkAccess";
+import { updateUserPhotoMultipart } from "src/utils/photoMultipart";
 import { updatedFields } from "src/utils/updateFields";
 
 export async function updatePersonalController(fastify: fastifyContextDTO) {
@@ -21,21 +22,16 @@ export async function updatePersonalController(fastify: fastifyContextDTO) {
         const isEmailExist = await getPersonalByEmail(parsedData.data.email);
         if (isEmailExist) throw new ServerError("Email já cadastrado", 409);
     };
+    
     if (parsedData.data.telefone && parsedData.data.telefone !== isPersonal.telefone) {
-
         const isPhoneExist = await getPersonalByPhone(parsedData.data.telefone);
         if (isPhoneExist) throw new ServerError("Telefone já cadastrado", 409);
     };
 
-    const foto = rawData.foto;
-    if (foto && typeof foto.toBuffer === 'function') {
-        const buffer = await foto.toBuffer();
-        const { filename, mimetype } = foto;
-        parsedData.data.foto = await photoStorageService({ buffer, filename, mimetype }, typeUploads.PERSONAL);
-    }
+    await updateUserPhotoMultipart(rawData, parsedData.data, typeUploads.PERSONAL);
 
     updatedFields(isPersonal, parsedData.data);
     await updatePersonal(isPersonal.id, parsedData.data);
 
-    fastify.res.status(200).send({ message: "Personal atualizado com sucesso"});
+    fastify.res.status(200).send({ message: "Personal atualizado com sucesso" });
 }

@@ -20,7 +20,7 @@ export async function loginPersonalController(fastify: fastifyContextDTO){
         throw new ServerError("Credencias inválidas");
     }
 
-    if (!personal) throw new ServerError("Personal não encontrado", 404);
+    if (!personal) throw new ServerError("Credencias inválidas");
 
     const isPasswordValid = await bcrypt.compare(parsedData.data.senha, personal.senha);
     if (!isPasswordValid) throw new ServerError("Credencias inválidas");
@@ -38,6 +38,8 @@ export async function loginPersonalController(fastify: fastifyContextDTO){
     fastify.res.setCookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",}).send({message: "Login realizado com sucesso",
+        sameSite: "strict",
+        maxAge: parsedData.data.rememberMe ? 60 * 60 * 24 * 60 : 60 * 60,
+    }).send({message: "Login realizado com sucesso",
     });
 }

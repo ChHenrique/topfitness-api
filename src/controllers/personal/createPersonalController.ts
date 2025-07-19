@@ -6,6 +6,7 @@ import { ServerError } from "src/services/serverError";
 import bcrypt from "bcrypt";
 import { typeUploads } from "src/types/typeUploads";
 import { photoStorageService } from "src/services/photoStorageService";
+import { createUserPhotoMultipart } from "src/utils/photoMultipart";
 
 export async function createPersonalController(fastify: fastifyContextDTO) {
     const user = fastify.req.user;
@@ -17,7 +18,6 @@ export async function createPersonalController(fastify: fastifyContextDTO) {
     const data = normalizeMultipartBody(rawData);
 
     const parsedData = personalSchema.safeParse(data);
-    console.log("Parsed Data:", parsedData.error);
     if (!parsedData.success) throw new ServerError("Dados inválidos", 400);
 
     if (parsedData.data.email) {
@@ -35,14 +35,7 @@ export async function createPersonalController(fastify: fastifyContextDTO) {
         parsedData.data.senha = hashedPassword;
     }
 
-    const foto = rawData.foto;
-    if (foto && typeof foto.toBuffer === 'function') {
-        const buffer = await foto.toBuffer();
-        const { filename, mimetype } = foto;
-        parsedData.data.foto = await photoStorageService({ buffer, filename, mimetype }, typeUploads.PERSONAL);
-    } else {
-        parsedData.data.foto = null;
-    }
+    await createUserPhotoMultipart(rawData, parsedData.data, typeUploads.PERSONAL);
 
     const personal = await createPersonal(parsedData.data);
     fastify.res.status(201).send({

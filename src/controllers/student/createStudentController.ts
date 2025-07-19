@@ -1,0 +1,47 @@
+import { fastifyContextDTO } from "src/interfaces/fastifyContextDTO";
+import { studentSchema, studentSchemaDTO } from "src/schemas/studentSchema";
+import { createStudent, getStudentByEmail, getStudentByPhone } from "src/services/database/IStudentRepository";
+import { normalizeMultipartBody } from "src/services/normalizeMultipartBody";
+import { ServerError } from "src/services/serverError";
+import { object } from "zod";
+import bcrypt from "bcrypt";
+import { createUserPhotoMultipart } from "src/utils/photoMultipart";
+import { typeUploads } from "src/types/typeUploads";
+
+export async function createStudentController(fastify: fastifyContextDTO) {
+    const user = fastify.req.user;
+
+    if (!user) throw new ServerError("Usuário não autenticado", 401);
+    if (user.role !== "ADMINISTRADOR" && user.role !== "PERSONAL") throw new ServerError("Acesso negado", 403);
+
+    const rawData = fastify.req.body as studentSchemaDTO;
+    const data = normalizeMultipartBody(rawData);
+
+    const parsedData = studentSchema.safeParse(rawData);
+    if (!parsedData.success) {
+        console.log("erro: ", parsedData.error.format);
+        throw new ServerError("Dados inválidos");
+    }
+
+    if (parsedData.data.email) {
+        const isEmailExist = await getStudentByEmail(parsedData.data.email);
+        if (isEmailExist) throw new ServerError("Email já cadastrado", 409)
+    };
+
+    if (parsedData.data.telefone) {
+        const isPhoneExist = await getStudentByPhone(parsedData.data.telefone);
+        if (isPhoneExist) throw new ServerError("Telefone já cadastrado", 409)
+    };
+
+    const hashedPassword = await bcrypt.hash(parsedData.data.senha, 10);
+    parsedData.data.senha = hashedPassword;
+
+    createUserPhotoMultipart(rawData, parsedData.data, typeUploads.ALUNO);
+
+    const { senha, ...rest } = parsedData.data;
+    await createStudent(parsedData.data);
+    fastify.res.status(201).send({
+        message: "Aluno criado com sucesso",
+        student: rest,
+    });
+}

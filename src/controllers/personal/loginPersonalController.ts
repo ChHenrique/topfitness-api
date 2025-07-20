@@ -36,6 +36,7 @@ export async function loginPersonalController(fastify: fastifyContextDTO){
     });
 
     fastify.res.setCookie("token", token, {
+        path: '/',
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",

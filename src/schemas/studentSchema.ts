@@ -17,7 +17,8 @@ export const studentSchema = z.object({
     foco_corpo: z.enum(FocoCorpo).optional(),
     observacao: z.string().optional(),
     treino_dias_por_semana: z.number().optional(),
-    planoId: z.string().optional(),
+    planoId: z.uuid().optional(),
+    personalId: z.uuid()
 });
 
 export const loginStudentSchema = z.object({

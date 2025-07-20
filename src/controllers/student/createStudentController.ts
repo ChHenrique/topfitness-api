@@ -14,14 +14,18 @@ export async function createStudentController(fastify: fastifyContextDTO) {
     if (!user) throw new ServerError("Usuário não autenticado", 401);
     if (user.role !== "ADMINISTRADOR" && user.role !== "PERSONAL") throw new ServerError("Acesso negado", 403);
 
+    if (user) {
+        console.log("USER: ", user)
+    }
+
     const rawData = fastify.req.body as studentSchemaDTO;
     const data = normalizeMultipartBody(rawData);
 
+    if (user.role === "PERSONAL") data.personalId = user.id;
+
     const parsedData = studentSchema.safeParse(data);
-    if (!parsedData.success) {
-        console.log("erro: ", parsedData.error.format);
-        throw new ServerError("Dados inválidos");
-    }
+    if (!parsedData.success) throw new ServerError("Dados inválidos");
+
 
     if (parsedData.data.email) {
         const isEmailExist = await getStudentByEmail(parsedData.data.email);
@@ -37,7 +41,7 @@ export async function createStudentController(fastify: fastifyContextDTO) {
     if (!parsedData.data.email && !parsedData.data.telefone) {
         throw new ServerError("Email ou telefone é obrigatório", 400);
     }
-    
+
     const hashedPassword = await bcrypt.hash(parsedData.data.senha, 10);
     parsedData.data.senha = hashedPassword;
 
@@ -45,7 +49,7 @@ export async function createStudentController(fastify: fastifyContextDTO) {
 
     const student = await createStudent(parsedData.data);
     const { senha, ...rest } = student;
-    
+
     fastify.res.status(201).send({
         message: "Aluno criado com sucesso",
         student: rest,

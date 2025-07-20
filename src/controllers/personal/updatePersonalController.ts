@@ -28,7 +28,7 @@ export async function updatePersonalController(fastify: fastifyContextDTO) {
         if (isPhoneExist) throw new ServerError("Telefone já cadastrado", 409);
     };
 
-    await updateUserPhotoMultipart(rawData, parsedData.data, typeUploads.PERSONAL);
+    await updateUserPhotoMultipart(rawData, parsedData, typeUploads.PERSONAL);
 
     updatedFields(isPersonal, parsedData.data);
     await updatePersonal(isPersonal.id, parsedData.data);

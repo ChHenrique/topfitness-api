@@ -24,13 +24,20 @@ export async function getPersonalByEmail(email: string) {
 export async function getPersonalById(id: string) {
     const personal = await prisma.personal.findUnique({
         where: { id },
+        include: {
+            alunos: true
+        }
     });
 
     return personal;
 };
 
 export async function getAllPersonals() {
-    const personals = await prisma.personal.findMany();
+    const personals = await prisma.personal.findMany({
+        include: {
+            alunos: true
+        }
+    });
 
     return personals;
 };

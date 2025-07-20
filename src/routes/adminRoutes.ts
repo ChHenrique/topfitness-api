@@ -9,7 +9,7 @@ import { updateAdminController } from "src/controllers/admin/updateAdminControll
 import { authMiddleware } from "src/middlewares/authMiddleware";
 
 export async function adminRoutes(fastify: FastifyInstance){
-    fastify.get('/admin', {preHandler: authMiddleware}, async (req, res) => await getAdminController({ req, res }));
+    fastify.get('/admin/:id', {preHandler: authMiddleware}, async (req, res) => await getAdminController({ req, res }));
 
     fastify.get('/admin/all', {preHandler: authMiddleware}, async (req, res) => await getAllAdminController({ req, res }));
 

@@ -17,7 +17,7 @@ export async function createStudentController(fastify: fastifyContextDTO) {
     const rawData = fastify.req.body as studentSchemaDTO;
     const data = normalizeMultipartBody(rawData);
 
-    const parsedData = studentSchema.safeParse(rawData);
+    const parsedData = studentSchema.safeParse(data);
     if (!parsedData.success) {
         console.log("erro: ", parsedData.error.format);
         throw new ServerError("Dados inválidos");
@@ -33,13 +33,19 @@ export async function createStudentController(fastify: fastifyContextDTO) {
         if (isPhoneExist) throw new ServerError("Telefone já cadastrado", 409)
     };
 
+
+    if (!parsedData.data.email && !parsedData.data.telefone) {
+        throw new ServerError("Email ou telefone é obrigatório", 400);
+    }
+    
     const hashedPassword = await bcrypt.hash(parsedData.data.senha, 10);
     parsedData.data.senha = hashedPassword;
 
-    createUserPhotoMultipart(rawData, parsedData.data, typeUploads.ALUNO);
+    await createUserPhotoMultipart(rawData, parsedData, typeUploads.ALUNO);
 
-    const { senha, ...rest } = parsedData.data;
-    await createStudent(parsedData.data);
+    const student = await createStudent(parsedData.data);
+    const { senha, ...rest } = student;
+    
     fastify.res.status(201).send({
         message: "Aluno criado com sucesso",
         student: rest,

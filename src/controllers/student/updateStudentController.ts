@@ -30,7 +30,7 @@ export async function updateStudentController(fastify: fastifyContextDTO){
         if (isPhoneExist) throw new ServerError("Telefone já cadastrado", 409);
     };
 
-    await updateUserPhotoMultipart(rawData, parsedData.data, typeUploads.ALUNO);
+    await updateUserPhotoMultipart(rawData, parsedData, typeUploads.ALUNO);
 
     updatedFields(isUserExist, parsedData.data);
     const test = await updateStudent(isUserExist.id, parsedData.data);

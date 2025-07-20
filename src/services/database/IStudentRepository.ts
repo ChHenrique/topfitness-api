@@ -1,18 +1,31 @@
 import { prisma } from "src/config/prisma";
 import { studentSchemaDTO } from "src/schemas/studentSchema";
 
-export async function createStudent(data: studentSchemaDTO){
+export async function createStudent(data: studentSchemaDTO) {
     const student = await prisma.aluno.create({
-        data: {...data, plano: { connect: { id: data.planoId } }},
-    });
+        data: {
+            ...data, ...(data.planoId && {
+                plano: {
+                    connect: { id: data.planoId }
+                }
+            })
+        },
+    })
 
     return student;
 };
 
-export async function updateStudent(id: string, data: Partial<studentSchemaDTO>){
+export async function updateStudent(id: string, data: Partial<studentSchemaDTO>) {
     const student = await prisma.aluno.update({
         where: { id },
-        data: {...data, plano: { connect: { id: data.planoId } }},
+        data: {
+            ...data,
+            ...(data.planoId && {
+                plano: {
+                    connect: { id: data.planoId }
+                }
+            })
+        },
     });
 
     return student;

@@ -35,7 +35,7 @@ export async function createPersonalController(fastify: fastifyContextDTO) {
         parsedData.data.senha = hashedPassword;
     }
 
-    await createUserPhotoMultipart(rawData, parsedData.data, typeUploads.PERSONAL);
+    await createUserPhotoMultipart(rawData, parsedData, typeUploads.PERSONAL);
 
     const personal = await createPersonal(parsedData.data);
     fastify.res.status(201).send({

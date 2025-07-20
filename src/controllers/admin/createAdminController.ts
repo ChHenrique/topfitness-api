@@ -32,7 +32,7 @@ export async function createAdminController(fastify: fastifyContextDTO) {
     const hashedPassword = await bcrypt.hash(parsedData.data.senha, 10);
     parsedData.data.senha = hashedPassword;
 
-    await createUserPhotoMultipart(rawData, parsedData.data, typeUploads.ADMINISTRADOR);
+    await createUserPhotoMultipart(rawData, parsedData, typeUploads.ADMINISTRADOR);
 
     await createAdmin(parsedData.data);
     fastify.res.status(201).send({message: "Administrador criado com sucesso"});

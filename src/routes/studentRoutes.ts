@@ -7,6 +7,7 @@ import { getStudentController } from "src/controllers/student/getStundentControl
 import { loginStudentController } from "src/controllers/student/loginStudentController";
 import { logoutStudentController } from "src/controllers/student/logoutStudentController";
 import { newStudentsOfTheMonthController } from "src/controllers/student/newStudentsOfTheMonthController";
+import { notifyStudentCOntroller } from "src/controllers/student/notifyStudentController";
 import { overdueStudentByPersonalController } from "src/controllers/student/overdueStudentController";
 import { updateStudentController } from "src/controllers/student/updateStudentController";
 import { updateValidityController } from "src/controllers/student/updateValidityController";
@@ -34,4 +35,6 @@ export async function studentRoutes(fastify: FastifyInstance) {
     fastify.get("/student/newStudentsOfTheMonth", {preHandler: authMiddleware}, async (req, res) => await newStudentsOfTheMonthController({req, res}));
 
     fastify.put("/student/updateValidity/:id", async (req, res) => await updateValidityController({req, res}))
+
+    fastify.post("/student/notify", {preValidation: authMiddleware}, async (req, res) => notifyStudentCOntroller({req,res}))
 }

@@ -143,3 +143,16 @@ export async function updateValidity(id: string, date: Date){
     
     return student;
 }
+
+export async function notifyMonthlyFee(today: Date, threeDaysAgo: Date){
+    const students = await prisma.aluno.findMany({
+        where: {
+            data_validade_plano: {
+                gte: threeDaysAgo,
+                lte: today
+            }
+        }
+    })
+
+    return students;
+}

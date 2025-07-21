@@ -3,6 +3,7 @@ import cors from "@fastify/cors";
 import fastifyCookie from "@fastify/cookie";
 import fastifyMultipart from "@fastify/multipart";
 import { registerRoutes } from "./routes/registerRoutes";
+import socketPlugin from "./config/socket.io"
 
 const server = fastify();
 
@@ -12,6 +13,8 @@ server.register(cors, {
     methods: ["GET", "POST", "PUT", "DELETE"],
 })
 
+
+server.register(socketPlugin,)
 server.register(fastifyMultipart, {
     limits: {
         fileSize: 3000000, // 3 MB

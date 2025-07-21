@@ -7,16 +7,14 @@ import { object } from "zod";
 import bcrypt from "bcrypt";
 import { createUserPhotoMultipart } from "src/utils/photoMultipart";
 import { typeUploads } from "src/types/typeUploads";
+import { getPlan } from "src/services/database/IPlanRepository";
+import { calculateValidity } from "src/utils/calculateValidity";
 
 export async function createStudentController(fastify: fastifyContextDTO) {
     const user = fastify.req.user;
 
     if (!user) throw new ServerError("Usuário não autenticado", 401);
     if (user.role !== "ADMINISTRADOR" && user.role !== "PERSONAL") throw new ServerError("Acesso negado", 403);
-
-    if (user) {
-        console.log("USER: ", user)
-    }
 
     const rawData = fastify.req.body as studentSchemaDTO;
     const data = normalizeMultipartBody(rawData);
@@ -37,17 +35,18 @@ export async function createStudentController(fastify: fastifyContextDTO) {
         if (isPhoneExist) throw new ServerError("Telefone já cadastrado", 409)
     };
 
+    if (!parsedData.data.email && !parsedData.data.telefone) throw new ServerError("Email ou telefone é obrigatório", 400);
 
-    if (!parsedData.data.email && !parsedData.data.telefone) {
-        throw new ServerError("Email ou telefone é obrigatório", 400);
-    }
+    const plan = await getPlan(parsedData.data.planoId)
+    if (!plan) throw new ServerError("Plano não encontrado", 404);
 
     const hashedPassword = await bcrypt.hash(parsedData.data.senha, 10);
     parsedData.data.senha = hashedPassword;
 
     await createUserPhotoMultipart(rawData, parsedData, typeUploads.ALUNO);
+    const validityPlan = calculateValidity(plan.duracaoMeses)
 
-    const student = await createStudent(parsedData.data);
+    const student = await createStudent(parsedData.data, validityPlan);
     const { senha, ...rest } = student;
 
     fastify.res.status(201).send({

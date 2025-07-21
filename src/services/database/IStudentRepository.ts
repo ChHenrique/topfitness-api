@@ -1,20 +1,21 @@
 import { prisma } from "src/config/prisma";
 import { studentSchemaDTO } from "src/schemas/studentSchema";
+import { getStartAndEndOfCurrentMonth } from "src/utils/getStartAndEndOfCurrentMonth";
 
-export async function createStudent(data: studentSchemaDTO) {
+export async function createStudent(data: studentSchemaDTO, dateValidity: Date) {
     const { personalId, planoId, ...rest } = data;
 
     const student = await prisma.aluno.create({
         data: {
             ...rest,
-            ...(planoId && {
-                plano: {
-                    connect: { id: planoId }
-                }
-            }),
+            plano: {
+                connect: { id: planoId }
+            }
+            ,
             personal: {
                 connect: { id: personalId }
-            }
+            },
+            data_validade_plano: dateValidity
         },
     });
 
@@ -29,9 +30,14 @@ export async function updateStudent(id: string, data: Partial<studentSchemaDTO>)
         data: {
             ...data,
             ...(data.planoId && {
-                plano: {
-                    connect: { id: data.planoId }
-                }
+            plano: {
+                connect: { id: data.planoId }
+            },
+            ...(data.personalId && {
+                personal: {
+                connect: { id: data.personalId }
+            },
+            })
             })
         },
     });
@@ -76,3 +82,64 @@ export async function getStudentByPhone(telefone: string) {
 
     return student;
 };
+
+
+export async function overdueStudentsByPersonal(idPersonal: string) {
+    const students = await prisma.aluno.findMany({
+        where: {
+            personal_id: idPersonal,
+            data_validade_plano: {
+                lt: new Date()
+            }
+        },
+        include: {
+            plano: true
+        }
+    })
+
+    return students
+}
+
+export async function overdueStudents() {
+    const students = await prisma.aluno.findMany({
+        where: {
+            data_validade_plano: {
+                lt: new Date()
+            }
+        },
+        include: {
+            plano: true
+        }
+    });
+
+    return students;
+};
+
+export async function newStudentsOfTheMonth(personal_id: string) {
+    const {start, end } = getStartAndEndOfCurrentMonth();
+
+    const newStudents = await prisma.aluno.findMany({
+        where: {
+            personal_id,
+            criado_em: {
+                gte: start,
+                lte: end
+            }
+        }, include: {
+            plano: true
+        }
+    })
+
+    return newStudents;
+}
+
+export async function updateValidity(id: string, date: Date){
+    const student = await prisma.aluno.update({
+        where: { id },
+        data: {
+            data_validade_plano: date
+        }
+    });
+    
+    return student;
+}

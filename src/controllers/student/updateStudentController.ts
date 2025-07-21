@@ -10,7 +10,7 @@ import { updatedFields } from "src/utils/updateFields";
 
 export async function updateStudentController(fastify: fastifyContextDTO){
     const isUserExist = await checkAccess(fastify, getStudentById);
-
+    
     const rawData = fastify.req.body as studentSchemaDTO;
     const data = normalizeMultipartBody(rawData);
 

@@ -5,6 +5,7 @@ import { ServerError } from "src/services/serverError";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { userDTO } from "src/types/user";
+import { payloadJWT } from "src/utils/payloadJWT";
 
 export async function loginAdminController(fastify: fastifyContextDTO){
     const data = fastify.req.body as LoginAdminSchemaDTO;
@@ -26,13 +27,7 @@ export async function loginAdminController(fastify: fastifyContextDTO){
     const isPasswordValid = await bcrypt.compare(parsedData.data.senha, admin.senha);
     if (!isPasswordValid) throw new ServerError("Credencias inválidas", 401);
 
-    const payload: userDTO = {
-        id: admin.id,
-        role: admin.role,
-        email: admin.email,
-        rememberMe: parsedData.data.rememberMe,
-    };
-
+    const payload = payloadJWT(admin, "ADMINISTRADOR")
     const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
         expiresIn: parsedData.data.rememberMe ? "60d" : "1h",
     });

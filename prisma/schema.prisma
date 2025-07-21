@@ -13,6 +13,13 @@ enum Role {
     ALUNO
 }
 
+enum TipoPlano {
+  MENSAL
+  TRIMESTRAL
+  SEMESTRAL
+  ANUAL
+}
+
 enum Sexo {
     MASCULINO
     FEMININO
@@ -67,11 +74,13 @@ model Aluno {
     personal      Personal?     @relation(fields: [personal_id], references: [id])
     criado_em     DateTime      @default(now())
     observacao     String?
+    data_validade_plano DateTime
 }
 
 model Plano {
     id         String        @id @default(uuid())
-    tipo_plano String
+    tipo_plano TipoPlano
+    duracaoMeses Int
     valor      Decimal
     alunos     Aluno[]
 }

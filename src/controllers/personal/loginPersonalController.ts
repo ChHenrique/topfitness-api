@@ -4,6 +4,7 @@ import { getPersonalByEmail, getPersonalByPhone } from "src/services/database/IP
 import { ServerError } from "src/services/serverError";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { payloadJWT } from "src/utils/payloadJWT";
 
 export async function loginPersonalController(fastify: fastifyContextDTO){
     const data = fastify.req.body as LoginPersonalSchemaDTO;
@@ -25,12 +26,7 @@ export async function loginPersonalController(fastify: fastifyContextDTO){
     const isPasswordValid = await bcrypt.compare(parsedData.data.senha, personal.senha);
     if (!isPasswordValid) throw new ServerError("Credencias inválidas");
 
-    const payload = {
-        id: personal.id,
-        role: "PERSONAL",
-        email: personal.email,
-        rememberMe: parsedData.data.rememberMe,
-    };
+    const payload = payloadJWT(personal, "PERSONAL");
     const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
         expiresIn: parsedData.data.rememberMe ? "60d" : "1h",
     });

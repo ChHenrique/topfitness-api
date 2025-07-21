@@ -2,6 +2,7 @@ export interface userDTO {
     role: "ALUNO" | "PERSONAL" | "ADMINISTRADOR";
     id: string;
     email: string;
+    telefone: string;
     rememberMe: boolean = false;
 }
 

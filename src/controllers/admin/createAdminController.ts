@@ -3,7 +3,7 @@ import { adminSchema, AdminSchemaDTO } from "src/schemas/adminSchema";
 import { createAdmin, getAdminByEmail, getAdminByPhone } from "src/services/database/IAdminRepository";
 import { ServerError } from "src/services/serverError";
 import bcrypt from "bcrypt";
-import { photoStorageService } from "src/services/photoStorageService";
+
 import { typeUploads } from "src/types/typeUploads";
 import { normalizeMultipartBody } from "src/services/normalizeMultipartBody";
 import { createUserPhotoMultipart } from "src/utils/photoMultipart";

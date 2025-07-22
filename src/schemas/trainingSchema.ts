@@ -1,11 +1,12 @@
 import z from "zod";
 
 export const focoCorpoEnum = z.enum([
+  "PEITO",
   "COSTAS",
-  "PERNA",
-  "BRACO",
+  "PERNAS",
+  "BRACOS",
   "GLUTEOS",
-  "CORPO_TODO",
+
 ]);
 
 export const trainingSchema = z.object({

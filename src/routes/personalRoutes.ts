@@ -6,6 +6,8 @@ import { getPersonalController } from "src/controllers/personal/getPersonalContr
 import { loginPersonalController } from "src/controllers/personal/loginPersonalController";
 import { logoutPersonalController } from "src/controllers/personal/logoutPersonalController";
 import { updatePersonalController } from "src/controllers/personal/updatePersonalController";
+import { newStudentsOfTheMonthController } from "src/controllers/student/newStudentsOfTheMonthController";
+import { overdueStudentByPersonalController } from "src/controllers/personal/overdueStudentPersonalController";
 import { authMiddleware } from "src/middlewares/authMiddleware";
 
 export async function personalRoutes(fastify: FastifyInstance) {
@@ -19,7 +21,11 @@ export async function personalRoutes(fastify: FastifyInstance) {
 
     fastify.delete("/personal/:id", { preHandler: authMiddleware }, async (req, res) => await deletePersonalController({ req, res }));
 
-    fastify.get("/personal/all", {preHandler: authMiddleware}, async (req, res) => await getAllPersonalController({req, res}));
+    fastify.get("/personal/all", { preHandler: authMiddleware }, async (req, res) => await getAllPersonalController({ req, res }));
 
     fastify.delete("/personal/logout", { preHandler: authMiddleware }, async (req, res) => await logoutPersonalController({ req, res }));
+
+    fastify.get("/personal/newStudentsOfTheMonth", { preHandler: authMiddleware }, async (req, res) => await newStudentsOfTheMonthController({ req, res }));
+
+    fastify.get("/personal/studentOverdue/:id", { preHandler: authMiddleware }, async (req, res) => await overdueStudentByPersonalController({ req, res }));
 }

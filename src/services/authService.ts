@@ -17,8 +17,7 @@ export const validateLoginInput = (data: unknown): UserLoginSchemaDTO => {
 export const findUserByCredentials = async (credentials: UserLoginSchemaDTO) => {
   const { email, telefone } = credentials;
 
-  const user = email
-    ? await getUserByEmail(email)
+  const user = email? await getUserByEmail(email)
     : telefone
       ? await getUserByPhone(telefone)
       : null;

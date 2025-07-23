@@ -7,6 +7,7 @@ import bcrypt from "bcrypt";
 import { typeUploads } from "src/types/typeUploads";
 import { normalizeMultipartBody } from "src/services/normalizeMultipartBody";
 import { createUserPhotoMultipart } from "src/utils/photoMultipart";
+import { verifyEmailOrPhoneExist } from "src/utils/verifyEmailOrPhoneExist";
 
 export async function createAdminController(fastify: fastifyContextDTO) {
     const user = fastify.req.user;
@@ -18,16 +19,9 @@ export async function createAdminController(fastify: fastifyContextDTO) {
     const data = normalizeMultipartBody(rawData);
 
     const parsedData = adminSchema.safeParse(data);
-    if (!parsedData.success) {
-        console.log("Erro de validação Zod:", parsedData.error.format);
-        throw new ServerError("Dados inválidos");
-    }
+    if (!parsedData.success) throw new ServerError("Dados inválidos");
 
-    const isEmailExist = await getAdminByEmail(parsedData.data.email);
-    if (isEmailExist) throw new ServerError("Email já cadastrado", 409);
-
-    const isPhoneExist = await getAdminByPhone(parsedData.data.telefone);
-    if (isPhoneExist) throw new ServerError("Telefone já cadastrado", 409);
+    await verifyEmailOrPhoneExist(parsedData)
 
     const hashedPassword = await bcrypt.hash(parsedData.data.senha, 10);
     parsedData.data.senha = hashedPassword;

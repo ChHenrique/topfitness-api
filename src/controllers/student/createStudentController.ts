@@ -3,12 +3,12 @@ import { studentSchema, studentSchemaDTO } from "src/schemas/studentSchema";
 import { createStudent, getStudentByEmail, getStudentByPhone } from "src/services/database/IStudentRepository";
 import { normalizeMultipartBody } from "src/services/normalizeMultipartBody";
 import { ServerError } from "src/services/serverError";
-import { object } from "zod";
 import bcrypt from "bcrypt";
 import { createUserPhotoMultipart } from "src/utils/photoMultipart";
 import { typeUploads } from "src/types/typeUploads";
 import { getPlan } from "src/services/database/IPlanRepository";
 import { calculateValidity } from "src/utils/calculateValidity";
+import { verifyEmailOrPhoneExist } from "src/utils/verifyEmailOrPhoneExist";
 
 export async function createStudentController(fastify: fastifyContextDTO) {
     const user = fastify.req.user;
@@ -24,17 +24,7 @@ export async function createStudentController(fastify: fastifyContextDTO) {
     const parsedData = studentSchema.safeParse(data);
     if (!parsedData.success) throw new ServerError("Dados inválidos");
 
-
-    if (parsedData.data.email) {
-        const isEmailExist = await getStudentByEmail(parsedData.data.email);
-        if (isEmailExist) throw new ServerError("Email já cadastrado", 409)
-    };
-
-    if (parsedData.data.telefone) {
-        const isPhoneExist = await getStudentByPhone(parsedData.data.telefone);
-        if (isPhoneExist) throw new ServerError("Telefone já cadastrado", 409)
-    };
-
+    await verifyEmailOrPhoneExist(parsedData)
     if (!parsedData.data.email && !parsedData.data.telefone) throw new ServerError("Email ou telefone é obrigatório", 400);
 
     const plan = await getPlan(parsedData.data.planoId)
@@ -49,6 +39,7 @@ export async function createStudentController(fastify: fastifyContextDTO) {
     const student = await createStudent(parsedData.data, validityPlan);
     const { senha, ...rest } = student;
 
+    const userStudent = {}
     fastify.res.status(201).send({
         message: "Aluno criado com sucesso",
         student: rest,

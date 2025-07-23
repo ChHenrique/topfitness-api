@@ -1,12 +1,13 @@
 import { fastifyContextDTO } from "src/interfaces/fastifyContextDTO";
 import { adminSchema, AdminSchemaDTO } from "src/schemas/adminSchema";
-import { getAdminByEmail, getAdminById, getAdminByPhone, updateAdmin } from "src/services/database/IAdminRepository";
+import { getAdminById, updateAdmin } from "src/services/database/IAdminRepository";
 import { ServerError } from "src/services/serverError";
-import { photoStorageService } from "src/services/photoStorageService";
 import { updatedFields } from "src/utils/updateFields";
 import { typeUploads } from "src/types/typeUploads";
 import { normalizeMultipartBody } from "src/services/normalizeMultipartBody";
 import { updateUserPhotoMultipart } from "src/utils/photoMultipart";
+import { getUserByEmail, getUserByPhone } from "src/services/database/IUserRepository";
+import { verifyEmailOrPhoneExist } from "src/utils/verifyEmailOrPhoneExist";
 
 export async function updateAdminController(fastify: fastifyContextDTO) {
     const user = fastify.req.user;
@@ -23,16 +24,7 @@ export async function updateAdminController(fastify: fastifyContextDTO) {
     const isAdminExist = await getAdminById(user.id);
     if (!isAdminExist) throw new ServerError("Administrador não encontrado", 404);
 
-    if (parsedData.data.email && parsedData.data.email !== isAdminExist.email) {
-        const isEmailExist = await getAdminByEmail(parsedData.data.email ?? '');
-        if (isEmailExist) throw new ServerError("Email já cadastrado", 409);
-    };
-
-    if (parsedData.data.telefone && parsedData.data.telefone !== isAdminExist.telefone) {
-        const isPhoneExist = await getAdminByPhone(parsedData.data.telefone ?? '');
-        if (isPhoneExist) throw new ServerError("Telefone já cadastrado", 409);
-    };
-
+    await verifyEmailOrPhoneExist(parsedData)
     await updateUserPhotoMultipart(rawData, parsedData, typeUploads.ADMINISTRADOR);
 
     updatedFields(isAdminExist, parsedData.data);

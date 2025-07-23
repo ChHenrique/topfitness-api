@@ -173,7 +173,7 @@ model AlunosTemporarios {
 
 model Usuario {
     id            String         @id @default(uuid())
-    role          Role
+    role          Role           @default(ALUNO)
     email         String?        @unique
     telefone      String?        @unique
     senha         String

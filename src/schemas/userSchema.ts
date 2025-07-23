@@ -1,5 +1,11 @@
 import z, { email } from "zod";
 
+export const userSchema = z.object({
+    email: z.email().optional(),
+    telefone: z.string().optional(),
+    senha: z.string()
+})
+
 export const userLoginSchema = z.object({
     email: email().optional(),
     telefone: z.string().optional(),
@@ -7,4 +13,5 @@ export const userLoginSchema = z.object({
     rememberMe: z.boolean().default(false),
 })  
 
+export type userSchemaDTO = z.infer<typeof userSchema>;
 export type UserLoginSchemaDTO = z.infer<typeof userLoginSchema>;

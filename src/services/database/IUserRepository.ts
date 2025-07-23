@@ -1,4 +1,22 @@
 import { prisma } from "src/config/prisma";
+import { userSchemaDTO } from "src/schemas/userSchema";
+
+export async function createUsers(data: userSchemaDTO){
+    const user = prisma.usuario.create({
+        data: {...data}
+    });
+
+    return user;
+}
+
+export async function updateUser(id: string, data: Partial<userSchemaDTO>){
+    const user = prisma.usuario.update({
+        where: {id},
+        data: {...data}
+    })
+
+    return user;
+}
 
 export async function getAllUsers() {
     return await prisma.usuario.findMany({

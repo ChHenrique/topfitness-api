@@ -7,6 +7,7 @@ import bcrypt from "bcrypt";
 import { typeUploads } from "src/types/typeUploads";
 import { photoStorageService } from "src/services/photoStorageService";
 import { createUserPhotoMultipart } from "src/utils/photoMultipart";
+import { verifyEmailOrPhoneExist } from "src/utils/verifyEmailOrPhoneExist";
 
 export async function createPersonalController(fastify: fastifyContextDTO) {
     const user = fastify.req.user;
@@ -20,20 +21,10 @@ export async function createPersonalController(fastify: fastifyContextDTO) {
     const parsedData = personalSchema.safeParse(data);
     if (!parsedData.success) throw new ServerError("Dados inválidos", 400);
 
-    if (parsedData.data.email) {
-        const isEmailExist = await getPersonalByEmail(parsedData.data.email);
-        if (isEmailExist) throw new ServerError("Email já cadastrado", 409);
-    }
+    await verifyEmailOrPhoneExist(parsedData)
 
-    if (parsedData.data.telefone) {
-        const isPhoneExist = await getPersonalByPhone(parsedData.data.telefone);
-        if (isPhoneExist) throw new ServerError("Telefone já cadastrado", 409);
-    }
-
-    if (parsedData.data.senha) {
-        const hashedPassword = await bcrypt.hash(parsedData.data.senha, 10);
-        parsedData.data.senha = hashedPassword;
-    }
+    const hashedPassword = await bcrypt.hash(parsedData.data.senha, 10);
+    parsedData.data.senha = hashedPassword;
 
     await createUserPhotoMultipart(rawData, parsedData, typeUploads.PERSONAL);
 

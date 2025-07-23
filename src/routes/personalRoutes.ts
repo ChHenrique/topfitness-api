@@ -6,7 +6,7 @@ import { getPersonalController } from "src/controllers/personal/getPersonalContr
 import { loginPersonalController } from "src/controllers/personal/loginPersonalController";
 import { logoutPersonalController } from "src/controllers/personal/logoutPersonalController";
 import { updatePersonalController } from "src/controllers/personal/updatePersonalController";
-import { newStudentsOfTheMonthController } from "src/controllers/student/newStudentsOfTheMonthController";
+import { newStudentsOfTheMonthController } from "src/controllers/personal/newStudentsOfTheMonthController";
 import { overdueStudentByPersonalController } from "src/controllers/personal/overdueStudentPersonalController";
 import { authMiddleware } from "src/middlewares/authMiddleware";
 

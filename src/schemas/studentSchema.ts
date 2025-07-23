@@ -13,7 +13,7 @@ export const studentSchema = z.object({
     data_matricula: z.string().optional(),
     email: z.email().optional(),
     senha: z.string().min(8),
-    telefone: z.string().optional(),
+    telefone: z.string().length(15).optional(),
     foco_corpo: z.enum(FocoCorpo).optional(),
     observacao: z.string().optional(),
     treino_dias_por_semana: z.number().optional(),
@@ -24,7 +24,7 @@ export const studentSchema = z.object({
 export const loginStudentSchema = z.object({
     email: z.email().optional(),
     senha: z.string().min(8),
-    telefone: z.string().optional(),
+    telefone: z.string().length(15).optional(),
     rememberMe: z.boolean().default(false),
 });
 

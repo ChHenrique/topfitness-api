@@ -156,3 +156,11 @@ model AlunoTreinoDiaSemana {
     diaSemana     DiaSemana
     alunoTreino   AlunoTreino @relation(fields: [alunoTreinoId], references: [id], onDelete: Cascade)
 }
+
+model AlunosTemporarios {
+    id          String @id @default(uuid())
+    nome        String
+    email       String
+    telefone    String
+    status      Boolean
+}

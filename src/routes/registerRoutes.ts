@@ -7,6 +7,7 @@ import { temporaryStudentRoutes } from "./temporaryStudentRoutes";
 import { userRoutes } from "./userRoutes";
 import { exerciseRoutes } from "./exerciseRoutes";
 import { studentTrainingRoutes } from "./studentTrainingRoutes";
+import { studentTrainingWeekDayRoutes } from "./studentTrainingWeekDayRoutes";
 
 type ServerRoute = (fastify: FastifyInstance) => Promise<void>;
 
@@ -18,7 +19,8 @@ const routes: ServerRoute[] = [
     temporaryStudentRoutes,
     userRoutes,
     exerciseRoutes,
-    studentTrainingRoutes
+    studentTrainingRoutes,
+    studentTrainingWeekDayRoutes
 ]
 
 export async function registerRoutes(fastify: FastifyInstance) {

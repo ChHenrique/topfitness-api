@@ -1,8 +1,8 @@
 import { fastifyContextDTO } from "src/interfaces/fastifyContextDTO";
-import { getAllTrainings, getTrainingById } from "src/services/database/ITrainingRepository";
+import { deleteExercise, getExerciseById } from "src/services/database/IExercisesRepository";
 import { ServerError } from "src/services/serverError";
 
-export async function getByIdTrainingController(fastify: fastifyContextDTO) {
+export async function deleteExerciseController(fastify: fastifyContextDTO) {
     const { user, params } = fastify.req;
     if (!user) throw new ServerError("Usuário não autenticado", 401);
     if (user.role === "ALUNO") throw new ServerError("Acesso negado", 403);
@@ -10,7 +10,11 @@ export async function getByIdTrainingController(fastify: fastifyContextDTO) {
     const { id } = params as { id?: string };
     if (!id) throw new ServerError("ID do treino não fornecido", 400);
 
-    const training = await getTrainingById(id);
+    const exerciseExists = await getExerciseById(id);
+    if (!exerciseExists) throw new ServerError("Treino não encontrado", 404);
 
-    fastify.res.status(200).send({ training });
+    await deleteExercise(id);
+
+    fastify.res.status(200).send({ message: "Treino deletado com sucesso" });
 }
+

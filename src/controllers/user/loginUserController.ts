@@ -1,4 +1,4 @@
-import { FastifyReply, FastifyRequest } from "fastify";
+import { FastifyReply } from "fastify";
 import { validateLoginInput, findUserByCredentials, verifyUserPassword, generateAuthToken, setAuthCookie } from "src/services/authService";
 import { validateStudentPlan } from "src/services/planService";
 

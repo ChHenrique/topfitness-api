@@ -1,9 +1,20 @@
+import { Role } from "@prisma/client";
 import { prisma } from "src/config/prisma";
 import { PersonalSchemaDTO } from "src/schemas/personalSchema";
+import { ServerError } from "../serverError";
 
 export async function createPersonal(data: PersonalSchemaDTO){
+      const usuario = await prisma.usuario.create({
+        data: {
+          email: data.email,
+          telefone: data.telefone,
+          senha: data.senha,
+          role: Role.PERSONAL,
+        },
+      });
+    
     const personal = await prisma.personal.create({
-        data: {...data},
+        data: { usuario_id: usuario.id, ...data},
     });
 
     return personal;
@@ -44,6 +55,22 @@ export async function getAllPersonals() {
 
 export async function updatePersonal(id: string, data: Partial<PersonalSchemaDTO>) {
     const {senha, ...rest} = data;
+
+    const personal = await prisma.personal.findUnique({
+        where: { id },
+        select: { usuario_id: true },
+    });
+
+    if (!personal) throw new ServerError("Personal não encontrado", 404);
+
+    await prisma.usuario.update({
+        where: { id: personal.usuario_id },
+        data: {
+            email: rest.email,
+            telefone: rest.telefone,
+            senha: senha ? senha : undefined,
+        } })
+
     const updatedPersonal = await prisma.personal.update({
         where: { id },
         data: rest

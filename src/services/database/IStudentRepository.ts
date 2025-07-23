@@ -1,49 +1,74 @@
+import { Prisma, Role } from "@prisma/client";
 import { prisma } from "src/config/prisma";
 import { studentSchemaDTO } from "src/schemas/studentSchema";
 import { getStartAndEndOfCurrentMonth } from "src/utils/getStartAndEndOfCurrentMonth";
+import { ServerError } from "../serverError";
+import { validateRelationships } from "src/utils/validateRelationships";
 
 export async function createStudent(data: studentSchemaDTO, dateValidity: Date) {
-    const { personalId, planoId, ...rest } = data;
+  const { planoId, personalId, ...rest } = data;
+  
+  await validateRelationships(planoId, personalId);
 
-    const student = await prisma.aluno.create({
-        data: {
-            ...rest,
-            plano: {
-                connect: { id: planoId }
-            }
-            ,
-            personal: {
-                connect: { id: personalId }
-            },
-            data_validade_plano: dateValidity
-        },
-    });
+  const usuario = await prisma.usuario.create({
+    data: {
+      email: data.email,
+      telefone: data.telefone,
+      senha: data.senha,
+      role: Role.ALUNO,
+    },
+  });
 
-    return student;
+  return await prisma.aluno.create({
+    data: {
+      usuario: { connect: { id: usuario.id } },
+      email: data.email,
+      telefone: data.telefone,
+      role: Role.ALUNO,
+      ...rest,
+      plano: { connect: { id: planoId } },
+      personal: { connect: { id: personalId } },
+      data_validade_plano: dateValidity,
+    },
+  });
 }
 
-
-
 export async function updateStudent(id: string, data: Partial<studentSchemaDTO>) {
-    const student = await prisma.aluno.update({
-        where: { id },
-        data: {
-            ...data,
-            ...(data.planoId && {
-            plano: {
-                connect: { id: data.planoId }
-            },
-            ...(data.personalId && {
-                personal: {
-                connect: { id: data.personalId }
-            },
-            })
-            })
-        },
+  const student = await prisma.aluno.findUnique({
+    where: { id },
+    include: { usuario: true }
+  });
+
+  if (!student || !student.usuario) throw new ServerError("Aluno não encontrado", 404);
+
+  const { planoId, personalId, ...updateData } = data;
+  const alunoUpdateData: Prisma.AlunoUpdateInput = {
+    ...(data.email && { email: data.email }),
+    ...(data.telefone && { telefone: data.telefone }),
+    ...(data.senha && { senha: data.senha }),
+    ...updateData
+  };
+
+  if (planoId) alunoUpdateData.plano = { connect: { id: planoId } };
+  if (personalId) alunoUpdateData.personal = { connect: { id: personalId } };
+
+  return await prisma.$transaction(async (prisma) => {
+    await prisma.usuario.update({
+      where: { id: student.usuario.id },
+      data: {
+        ...(data.email && { email: data.email }),
+        ...(data.telefone && { telefone: data.telefone }),
+        ...(data.senha && { senha: data.senha }),
+      }
     });
 
-    return student;
-};
+    return await prisma.aluno.update({
+      where: { id },
+      data: alunoUpdateData
+    });
+  });
+}
+
 
 export async function getStudentById(id: string) {
     const student = await prisma.aluno.findUnique({

@@ -7,3 +7,8 @@ export async function getPlan(id: string){
 
     return plan;
 };
+
+export async function getAllPlan(){
+    const plan = await prisma.plano.findMany();
+    return plan;
+}

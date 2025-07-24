@@ -1,6 +1,6 @@
 import { fastifyContextDTO } from "src/interfaces/fastifyContextDTO";
 import { studentSchema, studentSchemaDTO } from "src/schemas/studentSchema";
-import { createStudent, getStudentByEmail, getStudentByPhone } from "src/services/database/IStudentRepository";
+import { createStudent } from "src/services/database/IStudentRepository";
 import { normalizeMultipartBody } from "src/services/normalizeMultipartBody";
 import { ServerError } from "src/services/serverError";
 import bcrypt from "bcrypt";
@@ -39,7 +39,6 @@ export async function createStudentController(fastify: fastifyContextDTO) {
     const student = await createStudent(parsedData.data, validityPlan);
     const { senha, ...rest } = student;
 
-    const userStudent = {}
     fastify.res.status(201).send({
         message: "Aluno criado com sucesso",
         student: rest,

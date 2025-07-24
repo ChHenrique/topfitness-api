@@ -1,5 +1,5 @@
 import { fastifyContextDTO } from "src/interfaces/fastifyContextDTO";
-import { getAllTrainings, getTrainingById } from "src/services/database/ITrainingRepository";
+import { getTrainingById } from "src/services/database/ItrainingRepository";
 import { ServerError } from "src/services/serverError";
 
 export async function getByIdTrainingController(fastify: fastifyContextDTO) {

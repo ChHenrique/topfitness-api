@@ -32,7 +32,6 @@ export async function checkAccessWithPersonal(fastify: fastifyContextDTO, getUse
     if (!isAuthorized && !isSelfDelete) throw new ServerError("Acesso negado", 403);
 
     const targetId = isAuthorized ? id : user.id;
-
     const isUser = await getUserById(targetId);
     if (!isUser) throw new ServerError("User não encontrado", 404);
 

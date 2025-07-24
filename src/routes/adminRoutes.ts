@@ -15,7 +15,7 @@ export async function adminRoutes(fastify: FastifyInstance) {
 
     fastify.get('/admin/all', { preHandler: authMiddleware }, async (req, res) => await getAllAdminController({ req, res }));
 
-    fastify.post('/admin/register', { preHandler: authMiddleware }, async (req, res) => await createAdminController({ req, res }));
+    fastify.post('/admin/register', async (req, res) => await createAdminController({ req, res }));
 
     fastify.post('/admin/login', async (req, res) => await loginAdminController({ req, res }));
 

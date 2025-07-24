@@ -4,10 +4,10 @@ import { personalRoutes } from "./personalRoutes";
 import { studentRoutes } from "./studentRoutes";
 import { trainingRoutes } from "./trainingRoutes";
 import { temporaryStudentRoutes } from "./temporaryStudentRoutes";
-import { userRoutes } from "./userRoutes";
 import { exerciseRoutes } from "./exerciseRoutes";
 import { studentTrainingRoutes } from "./studentTrainingRoutes";
 import { studentTrainingWeekDayRoutes } from "./studentTrainingWeekDayRoutes";
+import { authRoutes } from "./authRoutes";
 
 type ServerRoute = (fastify: FastifyInstance) => Promise<void>;
 
@@ -17,7 +17,7 @@ const routes: ServerRoute[] = [
     studentRoutes,
     trainingRoutes,
     temporaryStudentRoutes,
-    userRoutes,
+    authRoutes,
     exerciseRoutes,
     studentTrainingRoutes,
     studentTrainingWeekDayRoutes

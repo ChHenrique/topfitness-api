@@ -10,10 +10,6 @@ import { createUserPhotoMultipart } from "src/utils/photoMultipart";
 import { verifyEmailOrPhoneExist } from "src/utils/verifyEmailOrPhoneExist";
 
 export async function createAdminController(fastify: fastifyContextDTO) {
-    const user = fastify.req.user;
-
-    if (!user) throw new ServerError("Usuário não autenticado", 401);
-    if (user.role !== "ADMINISTRADOR") throw new ServerError("Acesso negado", 403);
 
     const rawData = fastify.req.body as AdminSchemaDTO;
     const data = normalizeMultipartBody(rawData);

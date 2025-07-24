@@ -21,7 +21,9 @@
       "@schemas/": ["Schemas/"],
       "@services/": ["Services/"],
       "@interfaces/": ["Interfaces/"],
-      "@middleware/": ["Middleware/"]
+      "@middleware/": ["Middleware/"],
+      "src/*": ["src/*"],
+      "@utils/": ["Utils"]
     }
   },
   "include": ["./"],

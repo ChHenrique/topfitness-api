@@ -11,13 +11,13 @@ import { getTemporaryStudent } from "src/services/database/ITemporaryStudentRepo
 export async function temporaryStudentRoutes(fastify: FastifyInstance){
     fastify.post('/temporaryStudent', async (req, res) => await createTemporaryStudentController({req, res}));
 
-    fastify.put('/temporaryStudent/:temporaryStudentId', {preHandler: authMiddleware}, async (req, res) => await updateTemporaryStudentController({req, res}));
+    fastify.put('/temporaryStudent/:temporaryStudentId', async (req, res) => await updateTemporaryStudentController({req, res}));
 
-    fastify.delete('/temporaryStudent/:temporaryStudentId', {preHandler: authMiddleware}, async (req, res) => await deleteTemporaryStudentController({req, res}));
+    fastify.delete('/temporaryStudent/:temporaryStudentId', async (req, res) => await deleteTemporaryStudentController({req, res}));
 
-    fastify.get('/temporaryStudent/:temporaryStudentId', {preHandler: authMiddleware}, async (req, res) => await getTemporaryStudentController({req, res}))
+    fastify.get('/temporaryStudent/:temporaryStudentId', async (req, res) => await getTemporaryStudentController({req, res}))
 
-    fastify.get('/temporaryStudent/all', {preHandler: authMiddleware}, async (req, res) => await getAllTemporaryStudentController({req, res}))
+    fastify.get('/temporaryStudent/all', async (req, res) => await getAllTemporaryStudentController({req, res}))
 
-    fastify.get('/temporaryStudent/accept', {preHandler: authMiddleware}, async (req, res) => await getAllTemporaryStudentAcceptsController({req, res}))
+    fastify.get('/temporaryStudent/accept', async (req, res) => await getAllTemporaryStudentAcceptsController({req, res}))
 }

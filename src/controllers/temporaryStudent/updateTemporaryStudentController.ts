@@ -3,11 +3,12 @@ import { getTemporaryStudent, updateTemporaryStudent } from "src/services/databa
 import { ServerError } from "src/services/serverError";
 
 export async function updateTemporaryStudentController(fastify: fastifyContextDTO){
+    /* 
     const user = fastify.req.user;
     if (!user) throw new ServerError("user não autenticado", 401);
 
     if (user.role !== "ADMINISTRADOR") throw new ServerError("Acesso negado", 403);
-
+   */
     const { status } = fastify.req.body as { status: boolean };
     const { temporaryStudentId } = fastify.req.params as { temporaryStudentId: string };  
 

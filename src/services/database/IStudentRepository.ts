@@ -27,7 +27,7 @@ export async function createStudent(data: studentSchemaDTO, dateValidity: Date) 
       role: Role.ALUNO,
       ...rest,
       plano: { connect: { id: planoId } },
-      personal: { connect: { id: personalId } },
+      ...(personalId && { personal: { connect: { id: personalId } } }),
       data_validade_plano: dateValidity,
     },
   });

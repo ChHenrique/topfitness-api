@@ -10,6 +10,12 @@ import { timeValidityJWT } from "src/utils/timeValidityJWT";
 import { payloadJWT } from "src/utils/payloadJWT";
 
 export async function updateValidityController(fastify: fastifyContextDTO) {
+    const user = fastify.req.user;
+    const { id } = fastify.req.params as {id: string};
+
+    if (!user) throw new ServerError("Não autorizado", 401);
+
+    if (user.role !== "ADMINISTRADOR") throw new ServerError("Acesso negado", 403)
     const student: Aluno = await checkAccessWithPersonal(fastify, getStudentById);
 
     if (!student.plano_id) throw new ServerError("Nenhum plano ligado ao aluno foi encontrado", 404)

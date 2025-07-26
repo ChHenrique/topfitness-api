@@ -24,7 +24,7 @@ export async function studentRoutes(fastify: FastifyInstance) {
 
     fastify.get("/student/:id", { preHandler: authMiddleware }, async (req, res) => await getStudentController({ req, res }));
 
-    fastify.get("/student/all", async (req, res) => getAllStudentsController({ req, res }));
+    fastify.get("/student/all", { preHandler: authMiddleware }, async (req, res) => getAllStudentsController({ req, res }));
 
     fastify.delete("/student/:id", { preHandler: authMiddleware }, async (req, res) => deleteStudentController({ req, res }));  
 

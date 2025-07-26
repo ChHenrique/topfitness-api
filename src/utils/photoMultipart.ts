@@ -8,7 +8,7 @@ export async function createUserPhotoMultipart(rawData: any, parsedData: any, ty
         const { filename, mimetype } = foto;
         parsedData.data.foto = await photoStorageService({ buffer, filename, mimetype }, typeUploads);
     } else {
-        parsedData.data.foto = null;
+        parsedData.data.foto = "uploads/alunoUploads/dc8c9be9-2574-4f0f-ad05-e2962a851d09-perfil-de-usuário-do-vetor-avatar-padrão-179376714.webp";
     }
 }
 

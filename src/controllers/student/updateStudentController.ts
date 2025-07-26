@@ -8,7 +8,8 @@ import { typeUploads } from "src/types/typeUploads";
 import { checkAccess } from "src/utils/checkAccess";
 import { updateUserPhotoMultipart } from "src/utils/photoMultipart";
 import { updatedFields } from "src/utils/updateFields";
-import { verifyEmailOrPhoneExist } from "src/utils/verifyEmailOrPhoneExist";
+import { verifyEmailOrPhoneExistUpdate } from "src/utils/verifyEmailOrPhoneExist";
+import bcrypt from "bcrypt"
 
 export async function updateStudentController(fastify: fastifyContextDTO){
     const isUserExist = await checkAccess(fastify, getStudentById);
@@ -19,11 +20,12 @@ export async function updateStudentController(fastify: fastifyContextDTO){
     const parsedData = studentSchema.partial().safeParse(data);
     if (!parsedData.success) throw new ServerError("Dados inválidos");
 
-    await verifyEmailOrPhoneExist(parsedData)
+    await verifyEmailOrPhoneExistUpdate(parsedData, isUserExist)
     await updateUserPhotoMultipart(rawData, parsedData, typeUploads.ALUNO);
 
     updatedFields(isUserExist, parsedData.data);
-    const test = await updateStudent(isUserExist.id, parsedData.data);
+    if (parsedData.data.senha) parsedData.data.senha = await bcrypt.hash(parsedData.data.senha, 10)
 
+    const test = await updateStudent(isUserExist.id, parsedData.data);
     fastify.res.status(200).send({ message: "Aluno atualizado com sucesso", student: test });
 }

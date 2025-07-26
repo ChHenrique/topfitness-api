@@ -6,8 +6,8 @@ import { updatedFields } from "src/utils/updateFields";
 import { typeUploads } from "src/types/typeUploads";
 import { normalizeMultipartBody } from "src/services/normalizeMultipartBody";
 import { updateUserPhotoMultipart } from "src/utils/photoMultipart";
-import { getUserByEmail, getUserByPhone } from "src/services/database/IUserRepository";
-import { verifyEmailOrPhoneExist } from "src/utils/verifyEmailOrPhoneExist";
+import { verifyEmailOrPhoneExistUpdate } from "src/utils/verifyEmailOrPhoneExist";
+import bcrypt from "bcrypt";
 
 export async function updateAdminController(fastify: fastifyContextDTO) {
     const user = fastify.req.user;
@@ -24,10 +24,11 @@ export async function updateAdminController(fastify: fastifyContextDTO) {
     const isAdminExist = await getAdminById(user.id);
     if (!isAdminExist) throw new ServerError("Administrador não encontrado", 404);
 
-    await verifyEmailOrPhoneExist(parsedData)
+    await verifyEmailOrPhoneExistUpdate(parsedData, isAdminExist)
     await updateUserPhotoMultipart(rawData, parsedData, typeUploads.ADMINISTRADOR);
 
     updatedFields(isAdminExist, parsedData.data);
+    if (parsedData.data.senha) parsedData.data.senha = await bcrypt.hash(parsedData.data.senha, 10)
     await updateAdmin(isAdminExist.id, parsedData.data);
 
     fastify.res.status(200).send({ message: "Administrador atualizado com sucesso" });

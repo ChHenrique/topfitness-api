@@ -46,5 +46,6 @@ export async function loginUserController(fastify: fastifyContextDTO){
         maxAge: expiresIn,
         path: isStudent ? "/student" : "/"
     }).send({message: `Login realizado com sucesso, userRole: ${user.role}`,
+        userRole: user.role,
     });
 }

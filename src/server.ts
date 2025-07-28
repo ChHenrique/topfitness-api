@@ -6,6 +6,8 @@ import { registerRoutes } from "./routes/registerRoutes";
 import socketPlugin from "./config/socket.io"
 
 const server = fastify();
+server.register(registerRoutes)
+server.register(fastifyCookie)
 
 // registrando plugins
 server.register(cors, {
@@ -13,6 +15,7 @@ server.register(cors, {
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
 })
+
 
 
 server.register(socketPlugin,)
@@ -23,8 +26,8 @@ server.register(fastifyMultipart, {
     attachFieldsToBody: true,
 })
 
-server.register(fastifyCookie)
-server.register(registerRoutes)
+
+
 
 server.get("/", () => {
     return { message: "Bem vindo a API da Academia Top Fitness!" };

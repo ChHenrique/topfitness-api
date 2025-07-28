@@ -38,14 +38,21 @@ export async function loginUserController(fastify: fastifyContextDTO){
     const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
         expiresIn: isStudent ? expiresIn : "60d"
     });
+fastify.res.setCookie("token", token, {
+  httpOnly: true,
+  secure: false,
+  sameSite: "lax",
+  maxAge: expiresIn,
+  path: "/",
+});
 
-    fastify.res.setCookie("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: expiresIn,
-        path: isStudent ? "/student" : "/"
-    }).send({message: `Login realizado com sucesso, userRole: ${user.role}`,
-        userRole: user.role,
-    });
+    // fastify.res.setCookie("token", token, {
+    //     httpOnly: true,  
+    //     secure: false, // process.env.NODE_ENV === "production"
+    //     sameSite: "lax",
+    //     maxAge: 60 * 60 * 24 * 7,// expiresIn,
+    //     path: '/',// isStudent ? "/student" : "/"
+    // }).send({message: `Login realizado com sucesso, userRole: ${user.role}`,
+    //     userRole: user.role,
+    // });
 }

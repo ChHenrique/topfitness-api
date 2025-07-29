@@ -28,8 +28,8 @@ export async function updateAdminController(fastify: fastifyContextDTO) {
     await updateUserPhotoMultipart(rawData, parsedData, typeUploads.ADMINISTRADOR);
 
     updatedFields(isAdminExist, parsedData.data);
-    if (parsedData.data.senha) parsedData.data.senha = await bcrypt.hash(parsedData.data.senha, 10)
+    if (parsedData.data.senha) parsedData.data.senha = await bcrypt.hash(parsedData.data.senha, 10);
+    
     await updateAdmin(isAdminExist.id, parsedData.data);
-
     fastify.res.status(200).send({ message: "Administrador atualizado com sucesso" });
 }

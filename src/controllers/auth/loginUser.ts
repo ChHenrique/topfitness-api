@@ -26,7 +26,7 @@ export async function loginUserController(fastify: fastifyContextDTO){
     const comparePassword = await bcrypt.compare(senha, user.senha);
     if (!comparePassword) throw new ServerError("Credencias inválidas");
 
-    let expiresIn = 0, isStudent = false
+    let expiresIn = 1000 * 60 * 60 * 24, isStudent = false
     if (user.role === "ALUNO"){
         if (!user.aluno?.data_validade_plano) throw new ServerError("Data de matricula inválida");
         validateStudentPlan(user.aluno.id);

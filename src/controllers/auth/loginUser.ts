@@ -44,7 +44,9 @@ fastify.res.setCookie("token", token, {
   sameSite: "lax",
   maxAge: expiresIn,
   path: "/",
-});
+}).send({message: `Login realizado com sucesso, userRole: ${user.role}`,
+         userRole: user.role,
+        })
 
     // fastify.res.setCookie("token", token, {
     //     httpOnly: true,  

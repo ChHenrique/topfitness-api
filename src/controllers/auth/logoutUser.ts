@@ -12,6 +12,6 @@ export async function logOutUserController(fastify: fastifyContextDTO){
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        path: isStudent ? "/student" : "/",
+        path: "/",
     }).status(200).send({ message: "Logout realizado com sucesso", role: user.role });
 }

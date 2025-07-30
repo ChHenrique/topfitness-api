@@ -150,11 +150,21 @@ model AlunoTreino {
     id          String                 @id @default(uuid())
     aluno_id    String
     treino_id   String
-    concluido   Boolean                @default(false)
     aluno       Aluno                  @relation(fields: [aluno_id], references: [id])
     treino      Treino                 @relation(fields: [treino_id], references: [id])
     dias_semana AlunoTreinoDiaSemana[]
+    treinosRealizados TreinoRealizado[]
 }
+
+model TreinoRealizado {
+  id             String       @id @default(uuid())
+  alunoTreinoId  String
+  data           DateTime     
+  alunoTreino    AlunoTreino  @relation(fields: [alunoTreinoId], references: [id], onDelete: Cascade)
+
+  @@unique([alunoTreinoId, data]) 
+}
+
 
 model AlunoTreinoDiaSemana {
     id            String      @id @default(uuid())

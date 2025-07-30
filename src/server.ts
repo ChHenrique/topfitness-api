@@ -39,7 +39,3 @@ server.listen({ port: 4000, host: "0.0.0.0" }, (err, address) => {
     }
     console.log(`Server is running at ${address}`);
 });
-
-
-
-

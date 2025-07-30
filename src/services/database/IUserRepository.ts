@@ -25,10 +25,18 @@ export async function getAllUsers() {
 }
 
 export async function getUserById(id: string) {
-    return await prisma.usuario.findUnique({
-        where: { id },
-        include: { administrador: true, aluno: true, personal: true },
-    });
+  return await prisma.usuario.findUnique({
+    where: { id },
+    include: {
+      administrador: true,
+      personal: true,
+      aluno: {
+        include: {
+          treinos_aluno: true, 
+        },
+      },
+    },
+  });
 }
 
 export async function getUserByEmail(email: string) {

@@ -32,12 +32,18 @@ export async function getUserById(id: string) {
       personal: true,
       aluno: {
         include: {
-          treinos_aluno: true, 
+          treinos_aluno: {
+            include: {
+              treino: true,
+              dias_semana: true,
+            },
+          },
         },
       },
     },
   });
 }
+
 
 export async function getUserByEmail(email: string) {
     return await prisma.usuario.findUnique({

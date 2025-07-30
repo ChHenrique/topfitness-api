@@ -4,6 +4,7 @@ import fastifyCookie from "@fastify/cookie";
 import fastifyMultipart from "@fastify/multipart";
 import { registerRoutes } from "./routes/registerRoutes";
 import socketPlugin from "./config/socket.io"
+import { staticFilesPlugin } from "./services/static";
 
 const server = fastify();
 
@@ -22,8 +23,9 @@ server.register(fastifyMultipart, {
     attachFieldsToBody: true,
 })
 
-
 server.register(registerRoutes)
+
+server.register(staticFilesPlugin)
 server.register(fastifyCookie)
 
 server.get("/", () => {

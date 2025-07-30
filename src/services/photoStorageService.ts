@@ -9,11 +9,11 @@ export function photoStorageService(data: IPhotoStorageDTO, type: typeUploads) {
     const uploads = "uploads";
     
     const typeUploads = {
-        trainingUploads: join(uploads, 'training'),
-        exerciseUploads: join(uploads, 'exercise'),
-        alunoUploads: join(uploads, 'aluno'),
-        administradorUploads: join(uploads, 'administrador'),
-        personalUploads: join(uploads, 'personal'),
+        trainingUploads: join(uploads, 'trainingUploads'),
+        exerciseUploads: join(uploads, 'exerciseUploads'),
+        alunoUploads: join(uploads, 'alunoUploads'),
+        administradorUploads: join(uploads, 'administradorUploads'),
+        personalUploads: join(uploads, 'personalUploads'),
     } as const;
 
     [uploads, ...Object.values(typeUploads)].forEach(dir => mkdirSync(dir, { recursive: true }));

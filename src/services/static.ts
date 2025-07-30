@@ -1,17 +1,18 @@
 import { FastifyInstance } from "fastify";
-import { join, dirname } from "path";
+import path from "path";
 import { fileURLToPath } from "url";
 import fastifyStatic from "@fastify/static";
 
-// ✅ Simula __dirname corretamente em módulos ES
+// Corrige o caminho baseado no local real do arquivo
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = path.dirname(__filename);
 
 export async function staticFilesPlugin(fastify: FastifyInstance) {
-  const pathToUploads = join(__dirname, "..", "..", "uploads");
+  const pathToUploads = path.resolve(__dirname, "..", "..", "..", "topfitness-api", "uploads");
 
   fastify.register(fastifyStatic, {
     root: pathToUploads,
     prefix: "/uploads/",
   });
 }
+

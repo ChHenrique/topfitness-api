@@ -34,7 +34,11 @@ export async function getUserById(id: string) {
         include: {
           treinos_aluno: {
             include: {
-              treino: true,
+              treino: {
+                include: {
+                    exercicios: true
+                }
+              },
               dias_semana: true,
             },
           },

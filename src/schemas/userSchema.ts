@@ -1,9 +1,11 @@
+import { Role } from "@prisma/client";
 import z, { email } from "zod";
 
 export const userSchema = z.object({
     email: z.email().optional(),
     telefone: z.string().optional(),
-    senha: z.string()
+    senha: z.string(),
+    role: z.enum(Role),
 })
 
 export const userLoginSchema = z.object({

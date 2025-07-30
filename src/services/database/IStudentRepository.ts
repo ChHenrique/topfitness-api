@@ -73,6 +73,9 @@ export async function updateStudent(id: string, data: Partial<studentSchemaDTO>)
 export async function getStudentById(id: string) {
     const student = await prisma.aluno.findUnique({
         where: { id },
+        include: {
+            treinos_aluno: true
+        }
     });
 
     return student;

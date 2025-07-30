@@ -3,7 +3,7 @@ import { userSchemaDTO } from "src/schemas/userSchema";
 
 export async function createUsers(data: userSchemaDTO){
     const user = prisma.usuario.create({
-        data: {...data}
+        data: {...data,}
     });
 
     return user;

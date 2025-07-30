@@ -11,5 +11,6 @@ export async function trainingRoutes(fastify: FastifyInstance) {
     fastify.put('/training/update/:id', { preHandler: authMiddleware }, async (req, res) => await updateTrainingController({ req, res }));
     fastify.get('/trainings', { preHandler: authMiddleware }, async (req, res) => await getAllTrainingController({ req, res }));
     fastify.get('/training/:id', { preHandler: authMiddleware }, async (req, res) => await getByIdTrainingController({ req, res }));
+    // fastify.get('/trainings/month'), {preHandler: authMiddleware }, async (req, res) => await 
     fastify.delete('/training/:id', { preHandler: authMiddleware }, async (req, res) => await deleteTrainingController({ req, res }));
 };

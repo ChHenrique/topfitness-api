@@ -10,7 +10,7 @@ export const personalSchema = z.object({
     formacao: z.string().optional(),
     registro_profissional: z.string().optional(),
     especialidade: z.string().optional(),
-    disponibilidade: z.string().optional(),
+    disponibilidade: z.string().optional()
 });
 
 

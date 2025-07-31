@@ -9,7 +9,7 @@ export async function deleteStudentController(fastify: fastifyContextDTO) {
     const student = await getStudentByEmail(isStudent.email);
 
     if (!student) throw new ServerError("Aluno não encontrado");
-    await deleteStudent(student.id);
+    await deleteStudent(student.usuario_id, student.id);
     
     fastify.res.status(200).send({ message: "Aluno deletado com sucesso" });
 }

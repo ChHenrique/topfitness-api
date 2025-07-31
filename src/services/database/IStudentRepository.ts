@@ -82,11 +82,14 @@ export async function getStudentById(id: string) {
     return student;
 };
 
-export async function deleteStudent(id: string) {
+export async function deleteStudent(userId: string, id: string) {
     const student = await prisma.aluno.delete({
         where: { id },
     });
 
+    await prisma.usuario.delete({
+      where: { id: userId }
+    })
     return student;
 };
 

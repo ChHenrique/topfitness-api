@@ -73,7 +73,7 @@ model Aluno {
     plano                  Plano?        @relation(fields: [plano_id], references: [id])
     treinos_aluno          AlunoTreino[]
     personal_id            String?
-    personal               Personal?     @relation(fields: [personal_id], references: [id])
+    personal               Personal?     @relation(fields: [personal_id], references: [id], onDelete: Cascade)
     criado_em              DateTime      @default(now())
     observacao             String?
     data_validade_plano    DateTime
@@ -116,7 +116,7 @@ model Personal {
     registro_profissional String?
     especialidade         String?
     disponibilidade       String?
-    treinos_criados       Treino[]
+    treinos_criados       Treino[] @relation("PersonalTreinos")
     alunos                Aluno[]
     criado_em             DateTime @default(now())
 }
@@ -130,7 +130,7 @@ model Treino {
     exercicios Exercicio[]
     alunos     AlunoTreino[]
     criador_id String
-    criador    Personal      @relation(fields: [criador_id], references: [id])
+    criador    Personal      @relation("PersonalTreinos", fields: [criador_id], references: [id], onDelete: Cascade)
     criado_em  DateTime      @default(now())
 }
 
@@ -147,24 +147,23 @@ model Exercicio {
 }
 
 model AlunoTreino {
-    id          String                 @id @default(uuid())
-    aluno_id    String
-    treino_id   String
-    aluno       Aluno                  @relation(fields: [aluno_id], references: [id])
-    treino      Treino                 @relation(fields: [treino_id], references: [id])
-    dias_semana AlunoTreinoDiaSemana[]
+    id                String                 @id @default(uuid())
+    aluno_id          String
+    treino_id         String
+    aluno             Aluno                  @relation(fields: [aluno_id], references: [id])
+    treino            Treino                 @relation(fields: [treino_id], references: [id])
+    dias_semana       AlunoTreinoDiaSemana[]
     treinosRealizados TreinoRealizado[]
 }
 
 model TreinoRealizado {
-  id             String       @id @default(uuid())
-  alunoTreinoId  String
-  data           DateTime     
-  alunoTreino    AlunoTreino  @relation(fields: [alunoTreinoId], references: [id], onDelete: Cascade)
+    id            String      @id @default(uuid())
+    alunoTreinoId String
+    data          DateTime
+    alunoTreino   AlunoTreino @relation(fields: [alunoTreinoId], references: [id], onDelete: Cascade)
 
-  @@unique([alunoTreinoId, data]) 
+    @@unique([alunoTreinoId, data])
 }
-
 
 model AlunoTreinoDiaSemana {
     id            String      @id @default(uuid())

@@ -79,7 +79,11 @@ export async function updatePersonal(id: string, data: Partial<PersonalSchemaDTO
     return updatedPersonal;
 };
 
-export async function deletePersonal(id: string) {
+export async function deletePersonal(userId: string, id: string) {
+    await prisma.usuario.delete({
+        where: {id: userId}
+    })
+    
     const deletedPersonal = await prisma.personal.delete({
         where: { id },
     });

@@ -8,6 +8,7 @@ import { normalizeMultipartBody } from "src/services/normalizeMultipartBody";
 import { updateUserPhotoMultipart } from "src/utils/photoMultipart";
 import { verifyEmailOrPhoneExistUpdate } from "src/utils/verifyEmailOrPhoneExist";
 import bcrypt from "bcrypt";
+import { getUserById } from "src/services/database/IUserRepository";
 
 export async function updateAdminController(fastify: fastifyContextDTO) {
     const user = fastify.req.user;
@@ -19,17 +20,23 @@ export async function updateAdminController(fastify: fastifyContextDTO) {
     const data = normalizeMultipartBody(rawData);
 
     const parsedData = adminSchema.partial().safeParse(data);
-    if (!parsedData.success) throw new ServerError("Dados inválidos");
+    if (!parsedData.success) {
+  console.error("Erro de validação Zod:", parsedData.error.format());
+  console.log("Dados recebidos:", data);
+  throw new ServerError("Dados inválidos");
+}
 
-    const isAdminExist = await getAdminById(user.id);
+    const isAdminExist = await getUserById(user.id);
     if (!isAdminExist) throw new ServerError("Administrador não encontrado", 404);
+    const admin = isAdminExist?.administrador
+     if (!admin) throw new ServerError("Administrador não encontrado", 404);
 
-    await verifyEmailOrPhoneExistUpdate(parsedData, isAdminExist)
+    await verifyEmailOrPhoneExistUpdate(parsedData, admin)
     await updateUserPhotoMultipart(rawData, parsedData, typeUploads.ADMINISTRADOR);
 
-    updatedFields(isAdminExist, parsedData.data);
+    updatedFields(admin, parsedData.data);
     if (parsedData.data.senha) parsedData.data.senha = await bcrypt.hash(parsedData.data.senha, 10);
     
-    await updateAdmin(isAdminExist.id, parsedData.data);
+    await updateAdmin(admin.id, parsedData.data);
     fastify.res.status(200).send({ message: "Administrador atualizado com sucesso" });
 }

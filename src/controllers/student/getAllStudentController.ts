@@ -3,10 +3,9 @@ import { getAllStudents } from "src/services/database/IStudentRepository";
 import { ServerError } from "src/services/serverError";
 
 export async function getAllStudentsController(fastify: fastifyContextDTO) {
-    // const user = fastify.req.user;
+     const user = fastify.req.user;
 
-    // if (!user) throw new ServerError("Usuário não autenticado", 401);
-    // if (user.role !== "ADMINISTRADOR" && user.role !== "PERSONAL") throw new ServerError("Acesso negado", 403);
+     if (!user) throw new ServerError("Usuário não autenticado", 401);
 
     const students = await getAllStudents();
     if (!students || students.length === 0) throw new ServerError("Nenhum aluno encontrado", 404);

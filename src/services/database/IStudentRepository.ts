@@ -96,7 +96,8 @@ export async function deleteStudent(userId: string, id: string) {
 export async function getAllStudents() {
     const students = await prisma.aluno.findMany({
         include: {
-            treinos_aluno: true
+            treinos_aluno: true,
+            personal: true
         }
     }
     );

@@ -3,7 +3,7 @@ import { ServerError } from "src/services/serverError";
 
 export async function checkAccess(fastify: fastifyContextDTO, getUserById: Function) {
     const user = fastify.req.user;
-    console.log(user)
+
     if (!user) throw new ServerError("Usuário não autenticado", 401)
     const { id } = fastify.req.params as { id?: string }; // id opcional
 

@@ -1,7 +1,6 @@
 import { fastifyContextDTO } from "src/interfaces/fastifyContextDTO";
 import { exerciseDTO, exerciseSchema } from "src/schemas/exerciseSchema";
 import { createExercise } from "src/services/database/IExercisesRepository";
-import { createTraining } from "src/services/database/ITrainingRepository";
 import { normalizeMultipartBody } from "src/services/normalizeMultipartBody";
 import { ServerError } from "src/services/serverError";
 import { typeUploads } from "src/types/typeUploads";

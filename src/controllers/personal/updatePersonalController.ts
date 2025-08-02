@@ -1,6 +1,6 @@
 import { fastifyContextDTO } from "src/interfaces/fastifyContextDTO";
 import { personalSchema, PersonalSchemaDTO } from "src/schemas/personalSchema";
-import { getPersonalById, updatePersonal } from "src/services/database/IPersonalRepository";
+import { getPersonalByEmail, getPersonalById, updatePersonal } from "src/services/database/IPersonalRepository";
 import { normalizeMultipartBody } from "src/services/normalizeMultipartBody";
 import { ServerError } from "src/services/serverError";
 import { typeUploads } from "src/types/typeUploads";
@@ -9,10 +9,14 @@ import { updateUserPhotoMultipart } from "src/utils/photoMultipart";
 import { updatedFields } from "src/utils/updateFields";
 import { verifyEmailOrPhoneExistUpdate } from "src/utils/verifyEmailOrPhoneExist";
 import bcrypt from "bcrypt";
+import { getUserById } from "src/services/database/IUserRepository";
 
 export async function updatePersonalController(fastify: fastifyContextDTO) {
-    const isPersonal = await checkAccess(fastify, getPersonalById);
-
+    const isAuthorized = await checkAccess(fastify, getUserById);
+    
+    const isPersonal = await getPersonalByEmail(isAuthorized.email)
+    if (!isPersonal) throw new ServerError("Personal não encontrado")
+        
     const rawData = fastify.req.body as PersonalSchemaDTO;
     const data = normalizeMultipartBody(rawData);
 

@@ -9,6 +9,8 @@ import { typeUploads } from "src/types/typeUploads";
 import { getPlan } from "src/services/database/IPlanRepository";
 import { calculateValidity } from "src/utils/calculateValidity";
 import { verifyEmailOrPhoneExist } from "src/utils/verifyEmailOrPhoneExist";
+import { getUserById } from "src/services/database/IUserRepository";
+import { getPersonalByEmail } from "src/services/database/IPersonalRepository";
 
 export async function createStudentController(fastify: fastifyContextDTO) {
     const user = fastify.req.user;
@@ -19,9 +21,18 @@ export async function createStudentController(fastify: fastifyContextDTO) {
     const rawData = fastify.req.body as studentSchemaDTO;
     const data = normalizeMultipartBody(rawData);
 
-    if (user.role === "PERSONAL") data.personalId = user.id;
+    if (user.role === "PERSONAL"){ 
+        const userPersonal = await getUserById(user.id);
+        if (!userPersonal) throw new ServerError("User não encontrando", 404)
+        
+        const personal = await getPersonalByEmail(userPersonal.email || "")
+        if (!personal) throw new ServerError("Personal não encontrado", 404);
+        
+        data.personalId = personal.id
+    }
 
     const parsedData = studentSchema.safeParse(data);
+    console.log(parsedData.error)
     if (!parsedData.success) throw new ServerError("Dados inválidos");
 
     await verifyEmailOrPhoneExist(parsedData)

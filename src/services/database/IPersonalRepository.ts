@@ -80,12 +80,59 @@ export async function updatePersonal(id: string, data: Partial<PersonalSchemaDTO
 };
 
 export async function deletePersonal(id: string) {
-        const deletedPersonal = await prisma.personal.delete({
-        where: { id },
+  await prisma.$transaction(async (tx) => {
+    // Buscar IDs dos treinos do personal
+    const treinos = await tx.treino.findMany({
+      where: { criador_id: id },
+      select: { id: true },
     });
 
-    return deletedPersonal;
-};
+    const treinoIds = treinos.map((t) => t.id);
+
+    // 1. Deletar treinos realizados (TreinoRealizado) e dias da semana (AlunoTreinoDiaSemana)
+    const alunoTreinos = await tx.alunoTreino.findMany({
+      where: { treino_id: { in: treinoIds } },
+      select: { id: true },
+    });
+
+    const alunoTreinoIds = alunoTreinos.map((t) => t.id);
+
+    await tx.treinoRealizado.deleteMany({
+      where: { alunoTreinoId: { in: alunoTreinoIds } },
+    });
+
+    await tx.alunoTreinoDiaSemana.deleteMany({
+      where: { alunoTreinoId: { in: alunoTreinoIds } },
+    });
+
+    // 2. Deletar vinculações aluno <-> treino
+    await tx.alunoTreino.deleteMany({
+      where: { treino_id: { in: treinoIds } },
+    });
+
+    // 3. Deletar exercícios
+    await tx.exercicio.deleteMany({
+      where: { treino_id: { in: treinoIds } },
+    });
+
+    // 4. Deletar os treinos
+    await tx.treino.deleteMany({
+      where: { id: { in: treinoIds } },
+    });
+
+    // 5. Desvincular os alunos
+    await tx.aluno.updateMany({
+      where: { personal_id: id },
+      data: { personal_id: null },
+    });
+
+    // 6. Deletar o personal
+    await tx.personal.delete({
+      where: { id },
+    });
+  });
+}
+
 
 export async function getPersonalByPhone(phone: string) {
     const personal = await prisma.personal.findUnique({

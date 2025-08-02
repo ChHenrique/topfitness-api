@@ -4,12 +4,11 @@ import { studentSchemaDTO } from "src/schemas/studentSchema";
 import { getStartAndEndOfCurrentMonth } from "src/utils/getStartAndEndOfCurrentMonth";
 import { ServerError } from "../serverError";
 import { validateRelationships } from "src/utils/validateRelationships";
-import { includes } from "zod";
 
 export async function createStudent(data: studentSchemaDTO, dateValidity: Date) {
-    const { planoId, personalId, ...rest } = data;
+    const { plano_id, personalId, ...rest } = data;
 
-    await validateRelationships(planoId, personalId);
+    await validateRelationships(plano_id, personalId);
 
     const usuario = await prisma.usuario.create({
         data: {
@@ -27,7 +26,7 @@ export async function createStudent(data: studentSchemaDTO, dateValidity: Date) 
             telefone: data.telefone,
             role: Role.ALUNO,
             ...rest,
-            plano: { connect: { id: planoId } },
+            plano: { connect: { id: plano_id } },
             ...(personalId && { personal: { connect: { id: personalId } } }),
             data_validade_plano: dateValidity,
         },
@@ -42,7 +41,7 @@ export async function updateStudent(id: string, data: Partial<studentSchemaDTO>)
 
     if (!student || !student.usuario) throw new ServerError("Aluno não encontrado", 404);
 
-    const { planoId, personalId, ...updateData } = data;
+    const { plano_id, personalId, ...updateData } = data;
     const alunoUpdateData: Prisma.AlunoUpdateInput = {
         ...(data.email && { email: data.email }),
         ...(data.telefone && { telefone: data.telefone }),
@@ -50,7 +49,7 @@ export async function updateStudent(id: string, data: Partial<studentSchemaDTO>)
         ...updateData
     };
 
-    if (planoId) alunoUpdateData.plano = { connect: { id: planoId } };
+    if (plano_id) alunoUpdateData.plano = { connect: { id: plano_id } };
     if (personalId) alunoUpdateData.personal = { connect: { id: personalId } };
 
     return await prisma.$transaction(async (prisma) => {

@@ -36,7 +36,7 @@ export const studentSchema = z.object({
     .transform((val) => Number(val))
     .optional(),
 
-  planoId: z.uuid(),
+  plano_id: z.uuid(),
   personalId: z.uuid().optional(),
 });
 

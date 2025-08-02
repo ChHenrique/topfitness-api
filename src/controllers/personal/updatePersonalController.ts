@@ -10,6 +10,7 @@ import { updatedFields } from "src/utils/updateFields";
 import { verifyEmailOrPhoneExistUpdate } from "src/utils/verifyEmailOrPhoneExist";
 import bcrypt from "bcrypt";
 import { getUserById } from "src/services/database/IUserRepository";
+getPersonalById
 
 export async function updatePersonalController(fastify: fastifyContextDTO) {
     const isAuthorized = await checkAccess(fastify, getUserById);

@@ -27,7 +27,7 @@ export async function createStudentController(fastify: fastifyContextDTO) {
         
         const personal = await getPersonalByEmail(userPersonal.email || "")
         if (!personal) throw new ServerError("Personal não encontrado", 404);
-        
+
         data.personalId = personal.id
     }
 
@@ -38,7 +38,7 @@ export async function createStudentController(fastify: fastifyContextDTO) {
     await verifyEmailOrPhoneExist(parsedData)
     if (!parsedData.data.email && !parsedData.data.telefone) throw new ServerError("Email ou telefone é obrigatório", 400);
 
-    const plan = await getPlan(parsedData.data.planoId)
+    const plan = await getPlan(parsedData.data.plano_id)
     if (!plan) throw new ServerError("Plano não encontrado", 404);
 
     const hashedPassword = await bcrypt.hash(parsedData.data.senha, 10);

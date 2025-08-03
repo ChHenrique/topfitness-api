@@ -32,6 +32,7 @@ export async function getUserById(id: string) {
       personal: true,
       aluno: {
         include: {
+          personal: true,
           treinos_aluno: {
             include: {
               treino: {

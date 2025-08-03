@@ -74,6 +74,7 @@ export async function getStudentById(id: string) {
     const student = await prisma.aluno.findUnique({
         where: { id },
         include: {
+            personal: true,
             treinos_aluno: {
                 include: {
                     treino: {

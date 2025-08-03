@@ -74,12 +74,21 @@ export async function getStudentById(id: string) {
     const student = await prisma.aluno.findUnique({
         where: { id },
         include: {
-            treinos_aluno: true
+            treinos_aluno: {
+                include: {
+                    treino: {
+                        include: {
+                            exercicios: true
+                        }
+                    }
+                }
+            }
         }
     });
 
     return student;
 };
+
 
 export async function deleteStudent(userId: string, id: string) {
     const student = await prisma.aluno.delete({
@@ -95,7 +104,15 @@ export async function deleteStudent(userId: string, id: string) {
 export async function getAllStudents() {
     const students = await prisma.aluno.findMany({
         include: {
-            treinos_aluno: true,
+            treinos_aluno: {
+                include: {
+                    treino: {
+                        include: {
+                            exercicios: true
+                        }
+                    }
+                }
+            },
             personal: true
         }
     }
@@ -107,6 +124,17 @@ export async function getAllStudents() {
 export async function getStudentByEmail(email: string) {
     const student = await prisma.aluno.findUnique({
         where: { email },
+        include: {
+            treinos_aluno: {
+                include: {
+                    treino: {
+                        include: {
+                            exercicios: true
+                        }
+                    }
+                }
+            }
+        }
     });
 
     return student;
@@ -115,6 +143,17 @@ export async function getStudentByEmail(email: string) {
 export async function getStudentByPhone(telefone: string) {
     const student = await prisma.aluno.findUnique({
         where: { telefone },
+        include: {
+            treinos_aluno: {
+                include: {
+                    treino: {
+                        include: {
+                            exercicios: true
+                        }
+                    }
+                }
+            }
+        }
     });
 
     return student;

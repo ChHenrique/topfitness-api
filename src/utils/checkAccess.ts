@@ -14,7 +14,6 @@ export async function checkAccess(fastify: fastifyContextDTO, getUserById: Funct
     const targetId = isAdmin ? (id || user.id) : user.id;
 
     const isUser = await getUserById(targetId);
-    if (!isUser) throw new ServerError("User não encontrado", 404);
 
     return isUser;
 }

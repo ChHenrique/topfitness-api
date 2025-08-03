@@ -10,7 +10,7 @@ import { createUserPhotoMultipart } from "src/utils/photoMultipart";
 import { verifyEmailOrPhoneExist } from "src/utils/verifyEmailOrPhoneExist";
 
 export async function createAdminController(fastify: fastifyContextDTO) {
-
+    
     const rawData = fastify.req.body as AdminSchemaDTO;
     const data = normalizeMultipartBody(rawData);
 

@@ -24,11 +24,12 @@ export async function createStudentController(fastify: fastifyContextDTO) {
     if (user.role === "PERSONAL"){ 
         const userPersonal = await getUserById(user.id);
         if (!userPersonal) throw new ServerError("User não encontrando", 404)
-        
+        console.log("USERPERSONAL: ", userPersonal)
         const personal = await getPersonalByEmail(userPersonal.email || "")
         if (!personal) throw new ServerError("Personal não encontrado", 404);
-
+        console.log("personal: ", personal)
         data.personalId = personal.id
+        console.log(data.personal_id)
     }
 
     const parsedData = studentSchema.safeParse(data);

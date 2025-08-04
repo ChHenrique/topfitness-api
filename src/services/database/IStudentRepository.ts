@@ -232,3 +232,21 @@ export async function notifyMonthlyFee(today: Date, threeDaysAgo: Date) {
 
     return students;
 }
+
+export async function linkPersonalToStudent(idStudent: string, personal_id: string){
+    const link = await prisma.aluno.update({
+        where: { id: idStudent},
+        data: { personal_id: personal_id}
+    })
+
+    return link
+}
+
+export async function unlinkPersonalToStudent(idStudent: string, personal_id: string){
+    const link = await prisma.aluno.update({
+        where: { id: idStudent},
+        data: { personal_id: null}
+    })
+
+    return link
+}

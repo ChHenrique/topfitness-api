@@ -12,6 +12,7 @@ import { updateStudentController } from "src/controllers/student/updateStudentCo
 import { updateValidityController } from "src/controllers/admin/updateValidityStudentController";
 import { authMiddleware } from "src/middlewares/authMiddleware";
 import { getAllPlanController } from "src/controllers/plan/getAllPlanController";
+import { linkPersonalToStudentControler, unlinkPersonalToStudentControler } from "src/controllers/student/linkPersonalToStudentController";
 
 export async function studentRoutes(fastify: FastifyInstance) {
     fastify.post("/student/register", { preHandler: authMiddleware }, async (req, res) => await createStudentController({ req, res }));
@@ -31,4 +32,8 @@ export async function studentRoutes(fastify: FastifyInstance) {
     fastify.post("/student/notify", {preHandler: authMiddleware}, async (req, res) => notifyStudentCOntroller({req,res}))
 
     fastify.get("/student/plan", async (req, res) => await getAllPlanController({req, res}))
+
+    fastify.put("/student/link-to-personal/:idStudent", {preHandler: authMiddleware}, async (req, res) => await linkPersonalToStudentControler({req, res}))
+
+    fastify.put("/student/unlink-to-personal/:idStudent",{preHandler: authMiddleware}, async (req, res) => await unlinkPersonalToStudentControler({req, res}))
 }

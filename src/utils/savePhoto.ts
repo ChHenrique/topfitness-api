@@ -11,7 +11,7 @@ export async function save(typeUploads: {}, data: IPhotoStorageDTO, type: string
     const typePath = typeUploads[type as keyof typeof typeUploads];
     if (!typePath) throw new ServerError("Tipo de upload inválido", 419);
 
-    const uniqueName = `${randomUUID()}-${data.filename}`;
+    const uniqueName = `${randomUUID()}`;
     const path = join(typePath, uniqueName);
     await writeFile(path, data.buffer);
 

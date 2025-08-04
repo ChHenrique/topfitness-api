@@ -10,10 +10,21 @@ import { updatedFields } from "src/utils/updateFields";
 import { verifyEmailOrPhoneExistUpdate } from "src/utils/verifyEmailOrPhoneExist";
 import bcrypt from "bcrypt";
 import { getUserById } from "src/services/database/IUserRepository";
-getPersonalById
+
 
 export async function updatePersonalController(fastify: fastifyContextDTO) {
-    const isAuthorized = await checkAccess(fastify, getUserById);
+    let isAuthorized
+
+    const isAuthorized1 = await checkAccess(fastify, getUserById);
+    isAuthorized = isAuthorized1
+    
+    if ( !isAuthorized1) {
+    const isAuthorized2 = await checkAccess(fastify, getPersonalById);
+    isAuthorized = isAuthorized2
+
+    }
+    
+
     
     const isPersonal = await getPersonalByEmail(isAuthorized.email)
     if (!isPersonal) throw new ServerError("Personal não encontrado")

@@ -8,7 +8,7 @@ export async function createUserPhotoMultipart(rawData: any, parsedData: any, ty
         const { filename, mimetype } = foto;
         parsedData.data.foto = await photoStorageService({ buffer, filename, mimetype }, typeUploads);
     } else {
-        parsedData.data.foto = "uploads/alunoUploads/default-photo.png";
+        parsedData.data.foto = "uploads/alunoUploads/photo-default.jpg";
     }
 }
 

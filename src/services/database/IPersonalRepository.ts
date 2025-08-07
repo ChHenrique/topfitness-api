@@ -21,37 +21,51 @@ export async function createPersonal(data: PersonalSchemaDTO){
 };
 
 export async function getPersonalByEmail(email: string) {
-    const personal = await prisma.personal.findUnique({
-        where: { email },
+  const personal = await prisma.personal.findUnique({
+    where: { email },
+    include: {
+      alunos: {
         include: {
-            alunos: true,
-            treinos_criados: true
-        }
-    });
+          treinos_aluno: true, 
+        },
+      },
+      treinos_criados: true, // Treinos criados pelo personal
+    },
+  });
 
-    return personal;
-};
+  return personal;
+}
 
 export async function getPersonalById(id: string) {
-    const personal = await prisma.personal.findUnique({
-        where: { id },
+  const personal = await prisma.personal.findUnique({
+    where: { id },
+    include: {
+      alunos: {
         include: {
-            alunos: true
-        }
-    });
+          treinos_aluno: true,
+        },
+      },
+      treinos_criados: true,
+    },
+  });
 
-    return personal;
-};
+  return personal;
+}
 
 export async function getAllPersonals() {
-    const personals = await prisma.personal.findMany({
+  const personals = await prisma.personal.findMany({
+    include: {
+      alunos: {
         include: {
-            alunos: true
-        }
-    });
+          treinos_aluno: true,
+        },
+      },
+      treinos_criados: true,
+    },
+  });
 
-    return personals;
-};
+  return personals;
+}
 
 export async function updatePersonal(id: string, data: Partial<PersonalSchemaDTO>) {
     const {senha, ...rest} = data;
@@ -135,9 +149,18 @@ export async function deletePersonal(id: string) {
 
 
 export async function getPersonalByPhone(phone: string) {
-    const personal = await prisma.personal.findUnique({
-        where: { telefone: phone },
-    });
+  const personal = await prisma.personal.findUnique({
+    where: { telefone: phone },
+    include: {
+      alunos: {
+        include: {
+          treinos_aluno: true,
+        },
+      },
+      treinos_criados: true,
+    },
+  });
 
-    return personal;
+  return personal;
+
 }

@@ -2,6 +2,7 @@ import { Role } from "@prisma/client";
 import { prisma } from "src/config/prisma";
 import { PersonalSchemaDTO } from "src/schemas/personalSchema";
 import { ServerError } from "../serverError";
+import { includes } from "zod";
 
 export async function createPersonal(data: PersonalSchemaDTO){
       const usuario = await prisma.usuario.create({
@@ -26,8 +27,12 @@ export async function getPersonalByEmail(email: string) {
     include: {
       alunos: {
         include: {
-          treinos_aluno: true, 
-        },
+          treinos_aluno: {
+            include: {
+              treino: true
+            }
+          }
+        }
       },
       treinos_criados: true, // Treinos criados pelo personal
     },
@@ -42,8 +47,12 @@ export async function getPersonalById(id: string) {
     include: {
       alunos: {
         include: {
-          treinos_aluno: true,
-        },
+          treinos_aluno: {
+            include: {
+              treino: true
+            }
+          }
+        }
       },
       treinos_criados: true,
     },
@@ -57,8 +66,12 @@ export async function getAllPersonals() {
     include: {
       alunos: {
         include: {
-          treinos_aluno: true,
-        },
+          treinos_aluno: {
+            include: {
+              treino: true
+            }
+          }
+        }
       },
       treinos_criados: true,
     },
@@ -154,7 +167,11 @@ export async function getPersonalByPhone(phone: string) {
     include: {
       alunos: {
         include: {
-          treinos_aluno: true,
+          treinos_aluno: {
+            include: {
+              treino: true, 
+            },
+          },
         },
       },
       treinos_criados: true,

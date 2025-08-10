@@ -5,6 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "tsc && tsc-alias && node fix-imports.cjs",
+    "start": "node dist/server.js",
     "dev": "tsx --watch src/server.ts",
     "generate": "prisma generate",
     "migrate": "prisma migrate dev"
@@ -12,7 +14,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.12.1",
+  "packageManager": "pnpm@10.14.0",
   "dependencies": {
     "@fastify/cookie": "^11.0.2",
     "@fastify/cors": "^11.0.1",
@@ -35,6 +37,8 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.0.14",
     "prisma": "^6.12.0",
+    "replace-in-file": "^8.3.0",
+    "tsc-alias": "^1.8.16",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   }

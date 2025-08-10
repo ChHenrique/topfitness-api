@@ -1,5 +1,5 @@
 import { fastifyContextDTO } from "src/interfaces/fastifyContextDTO";
-import { deleteTraining, getTrainingById } from "src/services/database/ItrainingRepository";
+import { deleteTraining, getTrainingById } from "src/services/database/ITrainingRepository";
 import { ServerError } from "src/services/serverError";
 
 export async function deleteTrainingController(fastify: fastifyContextDTO) {

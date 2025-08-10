@@ -16,10 +16,13 @@ export async function getStudentTrainingById(aluno_id: string) {
   });
 }
 
-export async function updateStudentTraining(id: string, concluido: boolean) {
+export async function updateStudentTraining(id: string, aluno_id: string, treino_id: string) {
   return await prisma.alunoTreino.update({
     where: { id },
-    data: { concluido }
+    data: { 
+      aluno_id,
+      treino_id
+     }
   });
 }
 

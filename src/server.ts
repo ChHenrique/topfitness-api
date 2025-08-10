@@ -10,7 +10,7 @@ const server = fastify();
 
 // registrando plugins
 server.register(cors, {
-    origin: "http://localhost:3000",
+    origin: "https://topfitnes.vercel.app",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
 })

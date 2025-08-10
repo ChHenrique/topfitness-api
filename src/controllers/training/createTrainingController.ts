@@ -1,7 +1,7 @@
 import { fastifyContextDTO } from "src/interfaces/fastifyContextDTO";
 import { trainingSchema, TrainingSchemaDTO } from "src/schemas/trainingSchema";
 import { getPersonalByEmail } from "src/services/database/IPersonalRepository";
-import { createTraining } from "src/services/database/ItrainingRepository";
+import { createTraining } from "src/services/database/ITrainingRepository";
 import { normalizeMultipartBody } from "src/services/normalizeMultipartBody";
 import { ServerError } from "src/services/serverError";
 import { typeUploads } from "src/types/typeUploads";

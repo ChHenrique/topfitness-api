@@ -18,7 +18,7 @@ export async function updateStudentTrainingController(fastify: fastifyContextDTO
 
     if (!parsed.success) throw new ServerError("Dados inválidos");
 
-    const updatedStudentTraining = await updateStudentTraining(id, parsed.data.concluido ?? false);
+    const updatedStudentTraining = await updateStudentTraining(id, parsed.data.aluno_id, parsed.data.treino_id);
 
     fastify.res.status(200).send({ message: "Treino aluno atualizado com sucesso", studentTraining: updatedStudentTraining });
 }

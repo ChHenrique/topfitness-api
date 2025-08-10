@@ -5,7 +5,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc && tsc-alias && node fix-imports.cjs",
+    "build": "pnpm install && pnpm generate && tsc && tsc-alias && node fix-imports.cjs",
     "start": "node dist/server.js",
     "dev": "tsx --watch src/server.ts",
     "generate": "prisma generate",

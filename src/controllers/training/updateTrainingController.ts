@@ -1,6 +1,6 @@
 import { fastifyContextDTO } from "../../interfaces/fastifyContextDTO";
 import { trainingSchema, TrainingSchemaDTO } from "../../schemas/trainingSchema";
-import { getTrainingById, updateTraining } from "../../services/database/ITrainingRepository";
+import { getTrainingById, updateTraining } from "../../services/database/ItrainingRepository";
 import { normalizeMultipartBody } from "../../services/normalizeMultipartBody";
 import { ServerError } from "../../services/serverError";
 import { typeUploads } from "../../types/typeUploads";

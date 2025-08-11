@@ -1,10 +1,11 @@
 {
   "name": "topfitness-api",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "pnpm install && pnpm generate && tsc && tsc-alias && node fix-imports.cjs",
+    "build": "pnpm install && pnpm generate && tsc && tsc-alias && node fix-imports.mjs",
     "start": "node dist/server.js",
     "dev": "tsx --watch src/server.ts",
     "generate": "prisma generate",

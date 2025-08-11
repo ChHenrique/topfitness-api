@@ -1,8 +1,8 @@
-import { fastifyContextDTO } from "src/interfaces/fastifyContextDTO";
-import { studentTrainingDTO, studentTrainingSchema } from "src/schemas/studentTrainingSchema";
-import { updateStudentTraining } from "src/services/database/studentTrainingRepository";
-import { normalizeMultipartBody } from "src/services/normalizeMultipartBody";
-import { ServerError } from "src/services/serverError";
+import { fastifyContextDTO } from "../../interfaces/fastifyContextDTO";
+import { studentTrainingDTO, studentTrainingSchema } from "../../schemas/studentTrainingSchema";
+import { updateStudentTraining } from "../../services/database/studentTrainingRepository";
+import { normalizeMultipartBody } from "../../services/normalizeMultipartBody";
+import { ServerError } from "../../services/serverError";
 
 export async function updateStudentTrainingController(fastify: fastifyContextDTO) {
     const { user, body, params } = fastify.req;

@@ -1,8 +1,8 @@
-import { fastifyContextDTO } from "src/interfaces/fastifyContextDTO";
-import { getPersonalByEmail } from "src/services/database/IPersonalRepository";
-import { getStudentById, linkPersonalToStudent, unlinkPersonalToStudent } from "src/services/database/IStudentRepository";
-import { getUserById } from "src/services/database/IUserRepository";
-import { ServerError } from "src/services/serverError";
+import { fastifyContextDTO } from "../../interfaces/fastifyContextDTO";
+import { getPersonalByEmail } from "../../services/database/IPersonalRepository";
+import { getStudentById, linkPersonalToStudent, unlinkPersonalToStudent } from "../../services/database/IStudentRepository";
+import { getUserById } from "../../services/database/IUserRepository";
+import { ServerError } from "../../services/serverError";
 
 export async function linkPersonalToStudentControler(fastify: fastifyContextDTO) {
     const user = fastify.req.user;

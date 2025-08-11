@@ -1,5 +1,5 @@
-import { prisma } from "src/config/prisma";
-import { studentTrainingDTO } from "src/schemas/studentTrainingSchema";
+import { prisma } from "../../config/prisma";
+import { studentTrainingDTO } from "../../schemas/studentTrainingSchema";
 
 
 export async function createStudentTraining(data: studentTrainingDTO) {

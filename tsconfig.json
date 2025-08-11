@@ -9,22 +9,10 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": false,
-
     "resolveJsonModule": true,
     "outDir": "dist",
   "rootDir": "./src",
     "baseUrl": "./",
-    "paths": {
-      "@config/": ["Config/"],
-      "@controllers/": ["Controllers/"],
-      "@routes/": ["Routes/"],
-      "@schemas/": ["Schemas/"],
-      "@services/": ["Services/"],
-      "@interfaces/": ["Interfaces/"],
-      "@middleware/": ["Middleware/"],
-      "src/*": ["src/*"],
-      "@utils/": ["Utils"]
-    }
   },
   "include": ["./"],
   "exclude": ["node_modules", "dist"]

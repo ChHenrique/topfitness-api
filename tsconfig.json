@@ -10,20 +10,19 @@
     "forceConsistentCasingInFileNames": true,
 
     "noEmit": false,
-
     "resolveJsonModule": true,
     "outDir": "dist",
     "baseUrl": "./",
     "paths": {
-      "@config/": ["Config/"],
-      "@controllers/": ["Controllers/"],
-      "@routes/": ["Routes/"],
-      "@schemas/": ["Schemas/"],
-      "@services/": ["Services/"],
-      "@interfaces/": ["Interfaces/"],
-      "@middleware/": ["Middleware/"],
-      "src/*": ["src/*"],
-      "@utils/": ["Utils"]
+      "@config/*": ["Config/*"],
+      "@controllers/*": ["Controllers/*"],
+      "@routes/*": ["Routes/*"],
+      "@schemas/*": ["Schemas/*"],
+      "@services/*": ["Services/*"],
+      "@interfaces/*": ["Interfaces/*"],
+      "@middleware/*": ["Middleware/*"],
+      "@utils/*": ["Utils/*"],
+      "src/*": ["src/*"]
     }
   },
   "include": ["./"],

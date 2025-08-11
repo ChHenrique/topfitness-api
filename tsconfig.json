@@ -2,27 +2,28 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "ESNext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "Bundler",
     "lib": ["ES2022"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-
     "noEmit": false,
+
     "resolveJsonModule": true,
     "outDir": "dist",
+  "rootDir": "./src",
     "baseUrl": "./",
     "paths": {
-      "@config/*": ["Config/*"],
-      "@controllers/*": ["Controllers/*"],
-      "@routes/*": ["Routes/*"],
-      "@schemas/*": ["Schemas/*"],
-      "@services/*": ["Services/*"],
-      "@interfaces/*": ["Interfaces/*"],
-      "@middleware/*": ["Middleware/*"],
-      "@utils/*": ["Utils/*"],
-      "src/*": ["src/*"]
+      "@config/": ["Config/"],
+      "@controllers/": ["Controllers/"],
+      "@routes/": ["Routes/"],
+      "@schemas/": ["Schemas/"],
+      "@services/": ["Services/"],
+      "@interfaces/": ["Interfaces/"],
+      "@middleware/": ["Middleware/"],
+      "src/*": ["src/*"],
+      "@utils/": ["Utils"]
     }
   },
   "include": ["./"],

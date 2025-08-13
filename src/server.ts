@@ -10,7 +10,7 @@ const server = fastify();
 
 // registrando plugins
 server.register(cors, {
-    origin: "https://www.topfitnes.com.br/",
+    origin: "https://www.topfitnes.com.br",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
 })

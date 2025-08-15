@@ -18,7 +18,7 @@ server.register(cors, {
 server.register(socketPlugin,)
 server.register(fastifyMultipart, {
     limits: {
-        fileSize: 3000000, // 3 MB
+        fileSize: 6000000, // 6 MB
     },
     attachFieldsToBody: true,
 })

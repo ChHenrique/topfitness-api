@@ -15,3 +15,14 @@ export async function newStudentsOfTheMonthController(fastify: fastifyContextDTO
 
     fastify.res.send(newStudents);
 }
+
+export async function newStudentsOfTheMonthControllerS(fastify: fastifyContextDTO) {
+    const thisUserIsAuthorized = await checkAccessWithPersonal(fastify, getUserById);
+
+    const personal = await getPersonalByEmail(thisUserIsAuthorized.email)
+    if (!personal) throw new ServerError("Personal não encontrado")
+
+    const newStudents = await newStudentsOfTheMonthS();
+
+    fastify.res.send(newStudents);
+}

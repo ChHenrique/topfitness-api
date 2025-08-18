@@ -1,6 +1,6 @@
 import { fastifyContextDTO } from "../../interfaces/fastifyContextDTO";
 import { getPersonalByEmail } from "../../services/database/IPersonalRepository";
-import { newStudentsOfTheMonth } from "../../services/database/IStudentRepository";
+import { NewStudentsOfTheMonth, newStudentsOfTheMonth } from "../../services/database/IStudentRepository";
 import { getUserById } from "../../services/database/IUserRepository";
 import { ServerError } from "../../services/serverError";
 import { checkAccessWithPersonal } from "../../utils/checkAccess";
@@ -22,7 +22,7 @@ export async function newStudentsOfTheMonthControllerS(fastify: fastifyContextDT
     const personal = await getPersonalByEmail(thisUserIsAuthorized.email)
     if (!personal) throw new ServerError("Personal não encontrado")
 
-    const newStudents = await newStudentsOfTheMonthS();
+    const newStudents = await NewStudentsOfTheMonth();
 
     fastify.res.send(newStudents);
 }

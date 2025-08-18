@@ -20,7 +20,7 @@ export async function overdueStudentController(fastify: fastifyContextDTO){
     const user = fastify.req.user;
     if (!user) throw new ServerError("Não autenticado", 401);
 
-    if (user.role !== "ADMINISTRADOR") throw new ServerError("Acesso negado", 403);    
+    if (user.role !== "ADMINISTRADOR" && user.role !== "PERSONAL") throw new ServerError("Acesso negado", 403);    
     const findManyOverdueStudents = await overdueStudents();
 
     fastify.res.send(findManyOverdueStudents);

@@ -210,6 +210,23 @@ export async function newStudentsOfTheMonth(personal_id: string) {
     return newStudents;
 }
 
+export async function newStudentsOfTheMonthS() {
+    const { start, end } = getStartAndEndOfCurrentMonth();
+
+    const newStudents = await prisma.aluno.findMany({
+        where: {
+            criado_em: {
+                gte: start,
+                lte: end
+            }
+        }, include: {
+            plano: true
+        }
+    })
+
+    return newStudents;
+}
+
 export async function updateValidity(id: string, date: Date) {
     const student = await prisma.aluno.update({
         where: { id },

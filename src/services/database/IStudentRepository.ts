@@ -210,7 +210,7 @@ export async function newStudentsOfTheMonth(personal_id: string) {
     return newStudents;
 }
 
-export async function newStudentsOfTheMonthS() {
+export async function NewStudentsOfTheMonth() {
     const { start, end } = getStartAndEndOfCurrentMonth();
 
     const newStudents = await prisma.aluno.findMany({

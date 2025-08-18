@@ -29,6 +29,8 @@ export async function personalRoutes(fastify: FastifyInstance) {
     fastify.get("/personal/newStudentsOfTheMonth/:id", { preHandler: authMiddleware }, async (req, res) => await newStudentsOfTheMonthController({ req, res }));
 
     fastify.get("/personal/studentOverdue/:id", { preHandler: authMiddleware }, async (req, res) => await overdueStudentByPersonalController({ req, res }));
-
+    
+    fastify.get("/personal/studentOverdue", {preHandler: authMiddleware}, async (req, res) => await overdueStudentController({req, res}))
+    
     fastify.get("/personal/token", { preHandler: authMiddleware }, async (req, res) => await getPersonalByToken({req, res}))
 }

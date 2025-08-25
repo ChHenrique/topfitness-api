@@ -153,9 +153,24 @@ export async function deletePersonal(id: string) {
       data: { personal_id: null },
     });
 
+    // Buscar o personal antes de deletar
+    const personal = await tx.personal.findUnique({
+      where: { id },
+      select: { usuario_id: true },
+    });
+
+    if (!personal) {
+      throw new Error("Personal não encontrado");
+    }
+
     // 6. Deletar o personal
     await tx.personal.delete({
       where: { id },
+    });
+
+    // 7. Deletar o usuário vinculado
+    await tx.usuario.delete({
+      where: { id: personal.usuario_id },
     });
   });
 }

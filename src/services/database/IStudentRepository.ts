@@ -92,15 +92,20 @@ export async function getStudentById(id: string) {
 
 
 export async function deleteStudent(userId: string, id: string) {
-    const student = await prisma.aluno.delete({
-        where: { id },
+  return await prisma.$transaction(async (tx) => {
+    // 1. Deletar aluno
+    const student = await tx.aluno.delete({
+      where: { id },
     });
 
-    await prisma.usuario.delete({
-      where: { id: userId }
-    })
+    // 2. Deletar usuário
+    await tx.usuario.delete({
+      where: { id: userId },
+    });
+
     return student;
-};
+  });
+}
 
 export async function getAllStudents() {
     const students = await prisma.aluno.findMany({

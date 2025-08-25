@@ -33,15 +33,16 @@ export async function createStudent(data: studentSchemaDTO, dateValidity: Date) 
     });
 }
 
-export async function updateStudent(id: string, data: Partial<studentSchemaDTO>) {
+export async function updateStudent(id: string, data: Partial<studentSchemaDTO> & { adicionarDiasValidade?: number }) {
     const student = await prisma.aluno.findUnique({
         where: { id },
-        include: { usuario: true }
+        include: { usuario: true, plano: true }
     });
 
     if (!student || !student.usuario) throw new ServerError("Aluno não encontrado", 404);
 
-    const { plano_id, personalId, ...updateData } = data;
+    const { plano_id, personalId, adicionarDiasValidade, ...updateData } = data;
+
     const alunoUpdateData: Prisma.AlunoUpdateInput = {
         ...(data.email && { email: data.email }),
         ...(data.telefone && { telefone: data.telefone }),
@@ -52,8 +53,23 @@ export async function updateStudent(id: string, data: Partial<studentSchemaDTO>)
     if (plano_id) alunoUpdateData.plano = { connect: { id: plano_id } };
     if (personalId) alunoUpdateData.personal = { connect: { id: personalId } };
 
-    return await prisma.$transaction(async (prisma) => {
-        await prisma.usuario.update({
+    // Atualizar data_validade_plano
+    if (adicionarDiasValidade) {
+        const agora = new Date();
+        let novaDataValidade = student.data_validade_plano;
+
+        // Se já venceu, começa a contar do dia atual
+        if (student.data_validade_plano < agora) {
+            novaDataValidade = agora;
+        }
+
+        novaDataValidade.setDate(novaDataValidade.getDate() + adicionarDiasValidade);
+        alunoUpdateData.data_validade_plano = novaDataValidade;
+    }
+
+    return await prisma.$transaction(async (tx) => {
+        // Atualiza usuário
+        await tx.usuario.update({
             where: { id: student.usuario.id },
             data: {
                 ...(data.email && { email: data.email }),
@@ -62,7 +78,8 @@ export async function updateStudent(id: string, data: Partial<studentSchemaDTO>)
             }
         });
 
-        return await prisma.aluno.update({
+        // Atualiza aluno
+        return await tx.aluno.update({
             where: { id },
             data: alunoUpdateData
         });

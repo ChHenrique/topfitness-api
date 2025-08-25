@@ -38,6 +38,11 @@ enum FocoCorpo {
     COSTAS
     GLUTEOS
     PERNAS
+    PANTURRILHA
+    OMBROS
+    TRICEPS
+    BICEPS 
+    ABDOMEN
 }
 
 enum DiaSemana {

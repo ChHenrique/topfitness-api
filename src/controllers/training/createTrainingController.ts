@@ -23,10 +23,11 @@ export async function createTrainingController(fastify: fastifyContextDTO) {
 
     await createUserPhotoMultipart(body, parsed, typeUploads.TRAINING);
 
-    await createTraining({
+    const training = await createTraining({
         ...parsed.data,
         criador_id: personal.id
     });
 
-    fastify.res.status(201).send({ message: "Treino criado com sucesso" });
+    fastify.res.status(201).send({ message: "Treino criado com sucesso", trainingId: training.id  });
 }
+

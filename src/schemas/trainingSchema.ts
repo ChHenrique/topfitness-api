@@ -6,7 +6,11 @@ export const focoCorpoEnum = z.enum([
   "PERNAS",
   "BRACOS",
   "GLUTEOS",
-
+  "PANTURRILHA",
+  "OMBROS",
+  "TRICEPS",
+  "BICEPS",
+  "ABDOMEN",
 ]);
 
 export const trainingSchema = z.object({

@@ -23,7 +23,18 @@ export const studentSchema = z.object({
     .transform((val) => Number(val))
     .optional(),
 
-  data_matricula: z.date().optional(),
+  data_matricula: z.preprocess(
+    (val) => {
+      if (typeof val === "string" || val instanceof Date) {
+        const parsed = new Date(val);
+        return isNaN(parsed.getTime()) ? undefined : parsed;
+      }
+      return undefined;
+    },
+    z.date()
+      .max(new Date(), { message: "A data de matrícula não pode ser no futuro." })
+      .optional()
+  ),
   email: z.email().optional(),
   senha: z.string().min(8),
   telefone: z.string().length(15).optional(),

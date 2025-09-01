@@ -23,7 +23,7 @@ export const studentSchema = z.object({
     .transform((val) => Number(val))
     .optional(),
 
-  data_matricula: z.string().optional(),
+  data_matricula: z.date().optional(),
   email: z.email().optional(),
   senha: z.string().min(8),
   telefone: z.string().length(15).optional(),

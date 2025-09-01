@@ -24,12 +24,9 @@ export async function createStudentController(fastify: fastifyContextDTO) {
     if (user.role === "PERSONAL"){ 
         const userPersonal = await getUserById(user.id);
         if (!userPersonal) throw new ServerError("User não encontrando", 404)
-        console.log("USERPERSONAL: ", userPersonal)
         const personal = await getPersonalByEmail(userPersonal.email || "")
         if (!personal) throw new ServerError("Personal não encontrado", 404);
-        console.log("personal: ", personal)
         data.personalId = personal.id
-        console.log(data.personal_id)
     }
 
     const parsedData = studentSchema.safeParse(data);
@@ -46,7 +43,7 @@ export async function createStudentController(fastify: fastifyContextDTO) {
     parsedData.data.senha = hashedPassword;
 
     await createUserPhotoMultipart(rawData, parsedData, typeUploads.ALUNO);
-    const validityPlan = calculateValidity(plan.duracaoMeses)
+    const validityPlan = calculateValidity(plan.duracaoMeses, parsedData.data.data_matricula || new Date())
 
     const student = await createStudent(parsedData.data, validityPlan);
     const { senha, ...rest } = student;

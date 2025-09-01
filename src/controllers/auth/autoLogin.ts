@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { fastifyContextDTO } from "src/interfaces/fastifyContextDTO";
-import { ServerError } from "src/services/serverError";
+import { fastifyContextDTO } from "../../interfaces/fastifyContextDTO";
+import { ServerError } from "../../services/serverError";
 
 export async function autoLogin(req: FastifyRequest, res: FastifyReply){
     const {user} = req

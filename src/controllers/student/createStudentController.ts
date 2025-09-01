@@ -43,7 +43,7 @@ export async function createStudentController(fastify: fastifyContextDTO) {
     parsedData.data.senha = hashedPassword;
 
     await createUserPhotoMultipart(rawData, parsedData, typeUploads.ALUNO);
-    const validityPlan = calculateValidity(plan.duracaoMeses, parsedData.data.data_matricula || new Date())
+    const validityPlan = calculateValidity(plan.duracaoMeses, parsedData.data.data_matricula || '')
 
     const student = await createStudent(parsedData.data, validityPlan);
     const { senha, ...rest } = student;

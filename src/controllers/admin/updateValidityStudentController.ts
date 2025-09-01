@@ -26,7 +26,7 @@ export async function updateValidityController(fastify: fastifyContextDTO) {
     const plano = await getPlan(student.plano_id)
     if (!plano) throw new ServerError("Plano não encontrado", 404);
 
-    const newValidity = calculateValidity(plano.duracaoMeses);
+    const newValidity = calculateValidity(plano.duracaoMeses, student.data_validade_plano);
     const updatedStudent = await updateValidity(student.id, newValidity);
 
     const expiresIn = timeValidityJWT(updatedStudent.data_validade_plano);

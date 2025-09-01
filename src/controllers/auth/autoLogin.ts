@@ -6,7 +6,7 @@ export async function autoLogin(req: FastifyRequest, res: FastifyReply){
     const {user} = req
 
     if (!user) {
-        throw new ServerError('Usuário não autenticado', 401);
+        return false
     }
 
     res.send({user})

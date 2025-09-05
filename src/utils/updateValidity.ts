@@ -1,5 +1,5 @@
-import { getPlan } from "src/services/database/IPlanRepository";
-import { ServerError } from "src/services/serverError";
+import { getPlan } from "../services/database/IPlanRepository";
+import { ServerError } from "../services/serverError";
 import { calculateValidity } from "./calculateValidity";
 
 export async function updateValidityStudent(isUserExist: any, parsedData: any) {

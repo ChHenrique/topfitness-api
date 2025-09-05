@@ -12,7 +12,7 @@ import { updateUserPhotoMultipart } from "../../utils/photoMultipart";
 import { updatedFields } from "../../utils/updateFields";
 import { verifyEmailOrPhoneExistUpdate } from "../../utils/verifyEmailOrPhoneExist";
 import bcrypt from "bcrypt";
-import { updateValidityStudent } from "src/utils/updateValidity";
+import { updateValidityStudent } from "../../utils/updateValidity";
 
 export async function updateStudentController(fastify: fastifyContextDTO) {
   const isUserExist = await checkAccessWithPersonal(fastify, getStudentById);

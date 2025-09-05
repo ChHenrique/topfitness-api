@@ -10,10 +10,21 @@ const server = fastify();
 
 // registrando plugins
 server.register(cors, {
-    origin: "https://www.topfitnes.com.br",
+    origin: (origin, callback) => {
+        const allowedOrigins = [
+            "https://topfitnes.com.br",
+            "https://www.topfitnes.com.br"
+        ];
+
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true); // origem permitida
+        } else {
+            callback(new Error("Not allowed by CORS"), false); // origem não permitida
+        }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
-})
+});
 
 server.register(socketPlugin,)
 server.register(fastifyMultipart, {

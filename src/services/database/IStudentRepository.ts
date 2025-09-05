@@ -47,7 +47,8 @@ export async function updateStudent(id: string, data: Partial<studentSchemaDTO> 
         ...(data.email && { email: data.email }),
         ...(data.telefone && { telefone: data.telefone }),
         ...(data.senha && { senha: data.senha }),
-        ...updateData
+        ...updateData,
+        data_validade_plano: data.data_validade_plano ? data.data_validade_plano : student.data_validade_plano,
     };
 
     if (plano_id) alunoUpdateData.plano = { connect: { id: plano_id } };

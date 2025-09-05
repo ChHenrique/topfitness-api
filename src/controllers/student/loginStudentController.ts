@@ -4,7 +4,6 @@ import { getStudentByEmail, getStudentByPhone } from "../../services/database/IS
 import { ServerError } from "../../services/serverError";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { timeValidityJWT } from "../../utils/timeValidityJWT";
 
 export async function loginStudentController(fastify: fastifyContextDTO){
     const data = fastify.req.body as LoginStudentSchemaDTO;
@@ -29,7 +28,10 @@ export async function loginStudentController(fastify: fastifyContextDTO){
     const isPasswordValid = await bcrypt.compare(parsedData.data.senha, student.senha);
     if (!isPasswordValid) throw new ServerError("Credenciais inválidas");
     
-    const expiresIn = timeValidityJWT(student.data_validade_plano)
+    if (student.data_validade_plano > new Date()) {
+        throw new ServerError("Seu plano está expirado. Entre em contato com a administração para renová-lo.", 403);
+    }
+    
     const payload = {
         id: student.id,
         role: "ALUNO",
@@ -37,15 +39,12 @@ export async function loginStudentController(fastify: fastifyContextDTO){
         telefone: student.telefone,
         rememberMe: parsedData.data.rememberMe,
     };
-    const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
-        expiresIn
-    });
+    const token = jwt.sign(payload, process.env.JWT_SECRET as string)
 
     fastify.res.setCookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        maxAge: expiresIn,
         path: "/student"
     }).send({message: "Login realizado com sucesso",
     });

@@ -7,7 +7,10 @@ export const studentSchema = z.object({
   foto: z.any(),
   sexo: z.enum(Sexo).optional(),
   foco_treino: z.enum(FocoTreino).optional(),
-  data_validade_plano: z.date().optional(),
+  data_validade_plano: z.preprocess(
+  (val) => (typeof val === "string" ? new Date(val) : val),
+  z.date()
+).optional(),
 
   peso: z
     .union([z.string(), z.number()])

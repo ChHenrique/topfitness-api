@@ -21,8 +21,11 @@ export async function updateStudentController(fastify: fastifyContextDTO) {
   const data = normalizeMultipartBody(rawData);
 
   const parsedData = studentSchema.partial().safeParse(data);
-  console.log("Erro de validação:", parsedData.error.format());
-  if (!parsedData.success) throw new ServerError("Dados inválidos");
+  
+  if (!parsedData.success) {
+    console.log("Erro de validação:", parsedData.error.format());
+    throw new ServerError("Dados inválidos");
+  }
 
   await verifyEmailOrPhoneExistUpdate(parsedData, isUserExist);
   await updateUserPhotoMultipart(rawData, parsedData, typeUploads.ALUNO);

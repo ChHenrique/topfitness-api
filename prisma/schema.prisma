@@ -155,8 +155,8 @@ model AlunoTreino {
     id                String                 @id @default(uuid())
     aluno_id          String
     treino_id         String
-    aluno             Aluno                  @relation(fields: [aluno_id], references: [id])
-    treino            Treino                 @relation(fields: [treino_id], references: [id])
+    aluno             Aluno                  @relation(fields: [aluno_id], references: [id], onDelete: Cascade)
+    treino            Treino                 @relation(fields: [treino_id], references: [id], onDelete: Cascade)
     dias_semana       AlunoTreinoDiaSemana[]
     treinosRealizados TreinoRealizado[]
 }
